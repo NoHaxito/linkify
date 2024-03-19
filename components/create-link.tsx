@@ -26,7 +26,10 @@ const createLinkSchema = z.object({
 });
 
 export function MainCreateLink({ session }: { session: Session | null }) {
-  const [link, setLink] = useState({
+  const [link, setLink] = useState<{
+    success: boolean;
+    link: string | null;
+  }>({
     success: false,
     link: null,
   });
@@ -55,7 +58,7 @@ export function MainCreateLink({ session }: { session: Session | null }) {
   }, []);
   return (
     <>
-      {link.success && (
+      {link.success && link.link && (
         <Alert>
           <PartyPopper className="h-4 w-4" />
           <AlertTitle>Your link is ready!</AlertTitle>
