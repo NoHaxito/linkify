@@ -5,7 +5,5 @@
 # Learn more from ready-to-use templates: https://www.gitpod.io/docs/introduction/getting-started/quickstart
 
 tasks:
-  - init: pnpm install && pnpm run build
-    command: pnpm run start
-
-
+  - init: curl -sSfL https://get.tur.so/install.sh | bash
+    command: source /home/gitpod/.bashrc && echo "Installation Succesfully!"
