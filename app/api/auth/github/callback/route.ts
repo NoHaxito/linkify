@@ -31,10 +31,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     console.log(existingUser);
 
     if (existingUser) {
-      console.log("llega aqui?");
       const session = await lucia.createSession(existingUser.id, {});
-      console.log("llega aqui? x2");
-
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
         sessionCookie.name,

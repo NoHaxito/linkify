@@ -5,6 +5,7 @@ import { ThemeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { LucideLink } from "lucide-react";
 import { validateRequest } from "@/lib/auth";
+import { UserMenu } from "./user-menu";
 
 export async function Navbar() {
   const { session, user } = await validateRequest();
@@ -14,9 +15,7 @@ export async function Navbar() {
         <div className="mr-4">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <LucideLink className="size-5" />
-            <span className="hidden font-bold sm:inline-block">
-              URL Shortener
-            </span>
+            <span className="hidden font-bold sm:inline-block">Linkify</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
@@ -33,7 +32,9 @@ export async function Navbar() {
               Sign In
             </Link>
           ) : (
-            <img src={user.avatar_url} className="size-9 rounded-full" />
+            <UserMenu>
+              <img src={user.avatar_url} className="size-9 rounded-full" />
+            </UserMenu>
           )}
           <nav className="flex items-center">
             <Link
