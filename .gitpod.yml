@@ -6,4 +6,4 @@
 
 tasks:
   - init: curl -sSfL https://get.tur.so/install.sh | bash
-    command: source /home/gitpod/.bashrc && echo "Installation Succesfully!"
+    command: echo "Installation Succesfully! Run source /home/gitpod/.bashrc to activate the shell."
