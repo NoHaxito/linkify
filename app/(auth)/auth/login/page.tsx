@@ -9,7 +9,7 @@ export default async function Home() {
       <div className="flex flex-col h-[100vh] w-full flex-1 items-center justify-center">
         <div className="flex flex-col gap-y-3 w-full h-full max-w-xs items-center justify-center">
           <div>
-            <h1 className="font-bold text-3xl">Linkify</h1>
+            <h1 className="text-center font-bold text-3xl">Linkify</h1>
             <p className="text-center text-muted-foreground text-sm">
               Free, unlimited url shortener.
             </p>

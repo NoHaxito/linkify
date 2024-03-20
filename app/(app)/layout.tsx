@@ -11,7 +11,7 @@ const fontSans = FontSans({
 });
 export const metadata: Metadata = {
   title: "Linkify",
-  description: "Make your links mighty mini",
+  description: "Make your links mini mighty",
 };
 
 export default function RootLayout({

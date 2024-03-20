@@ -24,7 +24,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { CalendarClock, Cloud, Gem, Info, Key } from "lucide-react";
+import { CalendarClock, Cloud, Gem, Globe, Info, Key } from "lucide-react";
 import Link from "next/link";
 
 export function FeaturesDialog() {
@@ -48,18 +48,22 @@ export function FeaturesDialog() {
           </DialogHeader>
 
           <div className="grid grid-cols-2 gap-2">
-            <div className="text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-              <CalendarClock className="size-5" />
-              Custom Expiry
-            </div>
-            <div className="p-4 text-sm bg-secondary/80 transition-colors text-center hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-              <Key className="size-5" />
-              Password Protection
-            </div>
-            <div className="col-span-2 text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-              <Cloud className="size-5" />
-              API Access
-            </div>
+            <FeaturesCard
+              icon={<CalendarClock className="size-5" />}
+              text="Custom Expiry"
+            />
+            <FeaturesCard
+              icon={<Key className="size-5" />}
+              text="Password Protection"
+            />
+            <FeaturesCard
+              icon={<Cloud className="size-5" />}
+              text="API Access"
+            />
+            <FeaturesCard
+              icon={<Globe className="size-5" />}
+              text="Custom Domain"
+            />
           </div>
 
           <div>
@@ -95,19 +99,20 @@ export function FeaturesDialog() {
             Create an account to get access to all features from the app.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="p-4 grid grid-cols-2 gap-2">
-          <div className="text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-            <CalendarClock className="size-5" />
-            Custom Expiry
-          </div>
-          <div className="p-4 text-sm bg-secondary/80 transition-colors text-center hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-            <Key className="size-5" />
-            Password Protection
-          </div>
-          <div className="col-span-2 text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg">
-            <Cloud className="size-5" />
-            API Access
-          </div>
+        <div className="p-4 grid grid-cols-2 gap-1">
+          <FeaturesCard
+            icon={<CalendarClock className="size-5" />}
+            text="Custom Expiry"
+          />
+          <FeaturesCard
+            icon={<Key className="size-5" />}
+            text="Password Protection"
+          />
+          <FeaturesCard icon={<Cloud className="size-5" />} text="API Access" />
+          <FeaturesCard
+            icon={<Globe className="size-5" />}
+            text="Custom Domain"
+          />
         </div>
         <DrawerFooter className="pt-2">
           <Link
@@ -122,5 +127,27 @@ export function FeaturesDialog() {
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
+  );
+}
+
+function FeaturesCard({
+  icon,
+  text,
+  className,
+}: {
+  icon: React.ReactNode;
+  text: string;
+  className?: string;
+}) {
+  return (
+    <div
+      className={cn(
+        className,
+        "text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg"
+      )}
+    >
+      {icon}
+      {text}
+    </div>
   );
 }

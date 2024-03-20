@@ -32,9 +32,15 @@ export async function Navbar() {
               Sign In
             </Link>
           ) : (
-            <UserMenu>
-              <img src={user.avatar_url} className="size-9 rounded-full" />
-            </UserMenu>
+            <Link
+              href="/dash"
+              className={cn(
+                "!rounded-xl",
+                buttonVariants({ size: "sm", variant: "secondary" })
+              )}
+            >
+              Dashboard
+            </Link>
           )}
           <nav className="flex items-center">
             <Link
