@@ -28,7 +28,6 @@ export async function GET(request: NextRequest): Promise<Response> {
     const existingUser = await db.user.findFirst({
       where: { github_id: githubUser.id },
     });
-    console.log(existingUser);
 
     if (existingUser) {
       const session = await lucia.createSession(existingUser.id, {});
