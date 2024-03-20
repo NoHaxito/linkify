@@ -20,7 +20,7 @@ export async function POST(request: Request) {
         user_id: session?.userId ?? null,
       },
     });
-    return NextResponse.json({ link: `${process.env.APP_URL}/l/${slug}` });
+    return NextResponse.json({ link: `${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}` });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       return NextResponse.json({ message: "Slug is taken" });

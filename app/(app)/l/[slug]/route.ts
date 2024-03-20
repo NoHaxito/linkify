@@ -11,7 +11,7 @@ export async function GET(
     },
   });
   if (!link) {
-    return NextResponse.redirect(`${process.env.APP_URL}/404`, {
+    return NextResponse.redirect(`${process.env.NEXT_PUBLIC_APP_URL}/404`, {
       status: 302,
     });
   }

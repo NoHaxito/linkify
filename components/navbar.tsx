@@ -5,7 +5,7 @@ import { ThemeToggle } from "./theme-toggle";
 import Link from "next/link";
 import { LucideLink } from "lucide-react";
 import { validateRequest } from "@/lib/auth";
-import { UserMenu } from "./user-menu";
+import { GoToDashboardButton } from "./go-to-dashboard-button";
 
 export async function Navbar() {
   const { session, user } = await validateRequest();
@@ -32,15 +32,7 @@ export async function Navbar() {
               Sign In
             </Link>
           ) : (
-            <Link
-              href="/dash"
-              className={cn(
-                "!rounded-xl",
-                buttonVariants({ size: "sm", variant: "secondary" })
-              )}
-            >
-              Dashboard
-            </Link>
+            <GoToDashboardButton />
           )}
           <nav className="flex items-center">
             <Link

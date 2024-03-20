@@ -18,8 +18,15 @@ import { Input } from "@/components/ui/input";
 import { FeaturesDialog } from "./features-dialog";
 import { generateRandomString, slugify } from "@/lib/utils";
 import { useEffect, useState } from "react";
-import { Loader2, PartyPopper } from "lucide-react";
+import { Info, Loader2, PartyPopper } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
 const createLinkSchema = z.object({
   url: z.string().url().min(1),
   slug: z.string().min(1),
@@ -98,9 +105,30 @@ export function MainCreateLink({ session }: { session: Session | null }) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Slug</FormLabel>
-                <FormControl>
-                  <Input placeholder="my-slug" {...field} />
-                </FormControl>
+                <div className="relative">
+                  <FormControl>
+                    <Input placeholder="my-slug" {...field} />
+                  </FormControl>
+                  <span className="absolute flex items-center justify-center right-3 top-1/2 -translate-y-1/2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-6"
+                          >
+                            <Info className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent className="mr-2 md:mr-0">
+                          This could not be modified.
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </span>
+                </div>
                 <FormDescription>
                   Your Linkify URL will be: <br />
                   {process.env.NEXT_PUBLIC_APP_URL}/{slugify(field.value)}
