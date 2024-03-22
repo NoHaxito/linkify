@@ -4,6 +4,8 @@ import { Inter as FontSans } from "next/font/google";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
 import { Navbar } from "@/components/navbar";
+import { FeaturesDialog } from "@/components/features-dialog";
+import { Toaster } from "@/components/ui/sonner";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -37,6 +39,8 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-1">{children}</main>
           </div>
+          <FeaturesDialog />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

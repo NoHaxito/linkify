@@ -24,21 +24,32 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { CalendarClock, Cloud, Gem, Globe, Info, Key } from "lucide-react";
+import {
+  BarChart3,
+  CalendarClock,
+  Cloud,
+  Gem,
+  Globe,
+  Info,
+  Key,
+} from "lucide-react";
 import Link from "next/link";
+import { useFeaturesDialog } from "@/store/features-dialog";
 
 export function FeaturesDialog() {
-  const [open, setOpen] = React.useState(false);
+  const open = useFeaturesDialog((state) => state.open);
+  const setOpen = useFeaturesDialog((state) => state.setOpen);
+  // const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
+        {/* <DialogTrigger asChild>
           <Button variant="link" className="w-full">
             <Gem className="size-4" />
             Unlock all features
           </Button>
-        </DialogTrigger>
+        </DialogTrigger> */}
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Unlock all features</DialogTitle>
@@ -53,16 +64,22 @@ export function FeaturesDialog() {
               text="Custom Expiry"
             />
             <FeaturesCard
-              icon={<Key className="size-5" />}
-              text="Password Protection"
-            />
-            <FeaturesCard
               icon={<Cloud className="size-5" />}
               text="API Access"
             />
             <FeaturesCard
               icon={<Globe className="size-5" />}
               text="Custom Domain"
+            />
+            <FeaturesCard
+              icon={<BarChart3 className="size-5" />}
+              text="Analytics"
+              disabled
+            />
+            <FeaturesCard
+              className="col-span-2"
+              icon={<Key className="size-5" />}
+              text="Password Protection"
             />
           </div>
 
@@ -86,12 +103,12 @@ export function FeaturesDialog() {
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
+      {/* <DrawerTrigger asChild>
         <Button variant="link" className="w-full">
           <Gem className="size-4" />
           Unlock all features
         </Button>
-      </DrawerTrigger>
+      </DrawerTrigger> */}
       <DrawerContent>
         <DrawerHeader className="text-left">
           <DrawerTitle>Unlock all features</DrawerTitle>
@@ -104,14 +121,20 @@ export function FeaturesDialog() {
             icon={<CalendarClock className="size-5" />}
             text="Custom Expiry"
           />
-          <FeaturesCard
-            icon={<Key className="size-5" />}
-            text="Password Protection"
-          />
           <FeaturesCard icon={<Cloud className="size-5" />} text="API Access" />
           <FeaturesCard
             icon={<Globe className="size-5" />}
             text="Custom Domain"
+          />
+          <FeaturesCard
+            icon={<BarChart3 className="size-5" />}
+            text="Analytics"
+            disabled
+          />
+          <FeaturesCard
+            className="col-span-2"
+            icon={<Key className="size-5" />}
+            text="Password Protection"
           />
         </div>
         <DrawerFooter className="pt-2">
@@ -134,16 +157,19 @@ function FeaturesCard({
   icon,
   text,
   className,
+  disabled = false,
 }: {
   icon: React.ReactNode;
   text: string;
   className?: string;
+  disabled?: boolean;
 }) {
   return (
     <div
+      aria-disabled={disabled}
       className={cn(
         className,
-        "text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg"
+        "text-xs aria-disabled:opacity-50 aria-disabled:pointer-events-none sm:text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg"
       )}
     >
       {icon}

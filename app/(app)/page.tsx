@@ -1,9 +1,10 @@
-import { MainCreateLink } from "@/components/create-link";
+import { CreateLinkForm } from "@/components/forms/create-link";
 import { validateRequest } from "@/lib/auth";
+import { generateRandomString } from "@/lib/utils";
 
 export default async function Home() {
   const { session, user } = await validateRequest();
-
+  const randomSlug = generateRandomString();
   return (
     <div className="container relative">
       <div className="flex flex-col h-[calc(100vh-4rem)] w-full flex-1 items-center justify-center">
@@ -12,7 +13,9 @@ export default async function Home() {
           <p className="text-center text-muted-foreground text-sm">
             Free, unlimited url shortener.
           </p>
-          <MainCreateLink session={session} />
+          <div className="max-h-96 pb-10">
+            <CreateLinkForm randomSlug={randomSlug} session={session} />
+          </div>
         </div>
       </div>
     </div>

@@ -1,9 +1,9 @@
 import { addDay } from "@formkit/tempo";
-import { generateRandomString } from "@/lib/generate-random-string";
 import { db } from "@/lib/prisma";
 import { validateRequest } from "@/lib/auth";
 import { NextResponse } from "next/server";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import { generateRandomString } from "@/lib/utils";
 
 export async function POST(request: Request) {
   const { session } = await validateRequest();
@@ -20,7 +20,9 @@ export async function POST(request: Request) {
         user_id: session?.userId ?? null,
       },
     });
-    return NextResponse.json({ link: `${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}` });
+    return NextResponse.json({
+      link: `${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}`,
+    });
   } catch (error) {
     if (error instanceof PrismaClientKnownRequestError) {
       return NextResponse.json({ message: "Slug is taken" });
