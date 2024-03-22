@@ -13,7 +13,7 @@ export async function GET() {
   cookies().set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes
+    sessionCookie.attributes,
   );
   return redirect("/auth/login");
 }

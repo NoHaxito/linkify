@@ -116,7 +116,7 @@ export function FeaturesDialog() {
             Create an account to get access to all features from the app.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="p-4 grid grid-cols-2 gap-1">
+        <div className="grid grid-cols-2 gap-1 p-4">
           <FeaturesCard
             icon={<CalendarClock className="size-5" />}
             text="Custom Expiry"
@@ -169,7 +169,7 @@ function FeaturesCard({
       aria-disabled={disabled}
       className={cn(
         className,
-        "text-xs aria-disabled:opacity-50 aria-disabled:pointer-events-none sm:text-sm p-4 bg-secondary/80 transition-colors hover:bg-secondary flex flex-col gap-y-2 items-center justify-center rounded-lg"
+        "flex flex-col items-center justify-center gap-y-2 rounded-lg bg-secondary/80 p-4 text-xs transition-colors hover:bg-secondary aria-disabled:pointer-events-none aria-disabled:opacity-50 sm:text-sm",
       )}
     >
       {icon}

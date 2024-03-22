@@ -9,14 +9,14 @@ import { Home, Link2, LogOut } from "lucide-react";
 
 export function Sidebar({ user }: { user: User | null }) {
   return (
-    <aside className="fixed left-0 top-[4rem] flex-1 min-w-[14rem] h-[calc(100vh-4rem)] shrink-0 -translate-x-[200%] border-r bg-background data-[open=true]:translate-x-0 md:sticky md:-ml-4 md:block md:translate-x-0 md:duration-300 dark:border-neutral-800 dark:bg-neutral-950 z-30 transition-[width,transform] transform duration-800 antialiased ease-in flex flex-col">
-      <nav className="h-[90%] flex-1 [scrollbar-gutter:stable] overflow-y-auto px-3 py-1.5 overflow-x-hidden flex flex-col gap-y-6">
+    <aside className="duration-800 fixed left-0 top-[4rem] z-30 flex h-[calc(100vh-4rem)] min-w-[14rem] flex-1 shrink-0 -translate-x-[200%] transform flex-col border-r bg-background antialiased transition-[width,transform] ease-in data-[open=true]:translate-x-0 dark:border-neutral-800 dark:bg-neutral-950 md:sticky md:-ml-4 md:block md:translate-x-0 md:duration-300">
+      <nav className="flex h-[90%] flex-1 flex-col gap-y-6 overflow-y-auto overflow-x-hidden px-3 py-1.5 [scrollbar-gutter:stable]">
         <ul className="flex flex-col gap-y-1">
           <SidebarItem
             href="/dash"
             text="Dashboard"
             icon={
-              <Home className="size-4 -ml-0.5 flex-none flex items-center justify-center" />
+              <Home className="-ml-0.5 flex size-4 flex-none items-center justify-center" />
             }
             active
           />
@@ -24,15 +24,15 @@ export function Sidebar({ user }: { user: User | null }) {
             href="/dash/links"
             text="Links"
             icon={
-              <Link2 className="size-4 -ml-0.5 flex-none flex items-center justify-center" />
+              <Link2 className="-ml-0.5 flex size-4 flex-none items-center justify-center" />
             }
           />
         </ul>
       </nav>
-      <div className="md:flex gap-y-1 flex-col truncate w-full items-center justify-center min-h-[4rem] mt-auto sticky bottom-0 px-4">
+      <div className="sticky bottom-0 mt-auto min-h-[4rem] w-full flex-col items-center justify-center gap-y-1 truncate px-4 md:flex">
         <Separator />
-        <div className="w-full flex items-center justify-between gap-1">
-          <Button size="sm" className="justify-start flex-1" variant="ghost">
+        <div className="flex w-full items-center justify-between gap-1">
+          <Button size="sm" className="flex-1 justify-start" variant="ghost">
             <img
               src={user?.avatar_url}
               className="size-7 rounded-full"
@@ -44,7 +44,7 @@ export function Sidebar({ user }: { user: User | null }) {
             href="/api/auth/logout"
             className={cn(
               buttonVariants({ variant: "ghost", size: "icon" }),
-              "size-9"
+              "size-9",
             )}
           >
             <LogOut className="size-4" />
@@ -75,13 +75,13 @@ function SidebarItem({
       <Link
         data-state={active ? "active" : undefined}
         className={cn(
-          "transition-colors duration-300 h-9 px-3 data-[state=active]:text-foreground data-[state=active]:bg-secondary hover:bg-secondary rounded-lg text-muted-foreground hover:text-foreground group truncate w-full flex items-center text-sm outline-none ring-inset focus-visible:ring-2 focus-visible:rounded-lg py-2.5 gap-x-3",
-          className
+          "group flex h-9 w-full items-center gap-x-3 truncate rounded-lg px-3 py-2.5 text-sm text-muted-foreground outline-none ring-inset transition-colors duration-300 hover:bg-secondary hover:text-foreground focus-visible:rounded-lg focus-visible:ring-2 data-[state=active]:bg-secondary data-[state=active]:text-foreground",
+          className,
         )}
         href={href}
       >
         <span>{icon}</span>
-        <div className="flex w-full items-center justify-between transition-opacity duration-[800ms]">
+        <div className="duration-[800ms] flex w-full items-center justify-between transition-opacity">
           {text}
           {/* {label ? <div>{label}</div> : null} */}
         </div>

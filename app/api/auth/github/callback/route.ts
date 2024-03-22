@@ -35,7 +35,7 @@ export async function GET(request: NextRequest): Promise<Response> {
       cookies().set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes
+        sessionCookie.attributes,
       );
       return new Response(null, {
         status: 302,
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     cookies().set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes
+      sessionCookie.attributes,
     );
     return new Response(null, {
       status: 302,
@@ -75,11 +75,11 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (e instanceof OAuth2RequestError) {
       // invalid code
       return NextResponse.redirect(
-        `${request.nextUrl.origin}/auth/login?error=${e.message}`
+        `${request.nextUrl.origin}/auth/login?error=${e.message}`,
       );
     }
     return NextResponse.redirect(
-      `${request.nextUrl.origin}/auth/login?error=${e.message}`
+      `${request.nextUrl.origin}/auth/login?error=${e.message}`,
     );
   }
 }

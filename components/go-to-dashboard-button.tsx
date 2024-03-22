@@ -12,7 +12,7 @@ export function GoToDashboardButton() {
       href="/dash"
       className={cn(
         "!rounded-xl",
-        buttonVariants({ size: "sm", variant: "secondary" })
+        buttonVariants({ size: "sm", variant: "secondary" }),
       )}
     >
       Dashboard

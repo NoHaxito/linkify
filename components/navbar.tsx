@@ -26,7 +26,7 @@ export async function Navbar() {
                 buttonVariants({
                   variant: "linkHover2",
                   size: "sm",
-                })
+                }),
               )}
             >
               Sign In
@@ -45,7 +45,7 @@ export async function Navbar() {
                   buttonVariants({
                     variant: "ghost",
                     size: "icon",
-                  })
+                  }),
                 )}
               >
                 <GithubIcon className="h-4 w-4" />

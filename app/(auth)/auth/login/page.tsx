@@ -6,11 +6,11 @@ import Link from "next/link";
 export default async function Home() {
   return (
     <div className="container relative">
-      <div className="flex flex-col h-[100vh] w-full flex-1 items-center justify-center">
-        <div className="flex flex-col gap-y-3 w-full h-full max-w-xs items-center justify-center">
+      <div className="flex h-[100vh] w-full flex-1 flex-col items-center justify-center">
+        <div className="flex h-full w-full max-w-xs flex-col items-center justify-center gap-y-3">
           <div>
-            <h1 className="text-center font-bold text-3xl">Linkify</h1>
-            <p className="text-center text-muted-foreground text-sm">
+            <h1 className="text-center text-3xl font-bold">Linkify</h1>
+            <p className="text-center text-sm text-muted-foreground">
               Free, unlimited url shortener.
             </p>
           </div>

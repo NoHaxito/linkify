@@ -10,7 +10,7 @@ function PageHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [childrenWithoutActions, actions] = pickChildren(
     children,
-    PageHeaderActions
+    PageHeaderActions,
   );
   return (
     <div
@@ -54,8 +54,8 @@ function PageHeaderActions({
   return (
     <div
       className={cn(
-        "border flex items-center justify-center space-x-4",
-        className
+        "flex items-center justify-center space-x-4 border",
+        className,
       )}
       {...props}
     />
