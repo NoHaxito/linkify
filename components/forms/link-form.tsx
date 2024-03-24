@@ -16,9 +16,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { cn, slugify } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CalendarIcon, Gem, Info, Loader2, PartyPopper } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Popover,
   PopoverContent,
@@ -42,8 +41,9 @@ import { Label } from "@/components/ui/label";
 import { addDay, format } from "@formkit/tempo";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
+// import { useAuth } from "@/store/auth";
 
-const createLinkSchema = z.object({
+export const createLinkSchema = z.object({
   url: z.string().url().min(1),
   slug: z.string().min(1),
   expires_at: z.date().optional(),
@@ -51,7 +51,9 @@ const createLinkSchema = z.object({
   allowUnauthenticated: z.boolean().optional(),
 });
 
-export function CreateLinkForm({
+export type CreateLinkSchema = z.infer<typeof createLinkSchema>;
+
+export function LinkForm({
   randomSlug,
   session,
 }: {
@@ -65,14 +67,17 @@ export function CreateLinkForm({
     success: false,
     link: null,
   });
-  const [customExpireDate, setCustomExpireDate] = useState(true);
-  const [passwordProtected, setPasswordProtected] = useState(false);
+  const [advancedOptions, setAdvancedOptions] = useState({
+    showExpireDate: true,
+    passwordProtected: false,
+  });
+  const defaultExpireDate = addDay(new Date(), !session ? 7 : 30);
   const form = useForm<z.infer<typeof createLinkSchema>>({
     resolver: zodResolver(createLinkSchema),
     defaultValues: {
       url: "",
       slug: randomSlug,
-      expires_at: addDay(new Date(), !session ? 7 : 30),
+      expires_at: defaultExpireDate,
       password: undefined,
       allowUnauthenticated: true,
     },
@@ -80,22 +85,50 @@ export function CreateLinkForm({
   });
   async function onSubmit(values: z.infer<typeof createLinkSchema>) {
     setLink({ success: false, link: null });
+    if (
+      advancedOptions.passwordProtected &&
+      (!values.password || values.password.length === 0)
+    ) {
+      toast.error("Password is required", {
+        description:
+          "You enabled password protection but did not provide a password.",
+      });
+      return;
+    }
     console.log(values);
 
-    // const res = await fetch("/api/link/create", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(values),
-    // }).then((res) => res.json());
-    // setLink({ success: true, link: res.link });
-    toast("Your link has been created", {
-      description: `https://linkify.nohaxito.xyz/l/${values.slug}`,
-      icon: <PartyPopper className="h-4 w-4" />,
-    });
+    const res = await fetch("/api/link/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    }).then((res) => res.json());
+    if (res.error) {
+      toast.error("Failed to create link", {
+        description: res.message,
+      });
+      return;
+    } else {
+      toast("Your link has been created", {
+        description: res.link,
+        icon: <PartyPopper className="h-4 w-4" />,
+      });
+    }
   }
-  const setOpen = useFeaturesDialog((state) => state.setOpen);
+  const setFeaturesDialog = useFeaturesDialog((state) => state.setOpen);
+  useEffect(() => {
+    const { showExpireDate, passwordProtected } = advancedOptions;
+    if (!showExpireDate) {
+      form.setValue("expires_at", undefined);
+    } else {
+      form.setValue("expires_at", defaultExpireDate);
+    }
+    if (!passwordProtected) {
+      form.setValue("password", undefined);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [advancedOptions]);
   return (
     <Form {...form}>
       <form
@@ -163,20 +196,29 @@ export function CreateLinkForm({
             <AccordionContent className="space-y-2 first:pt-5">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="custom-expires-date">Expire Date</Label>
+                  <div className="space-y-0.5">
+                    <Label htmlFor="custom-expires-date">Expire Date</Label>
+                    <FormDescription className="text-xs">
+                      Set an expiration date for your link.
+                    </FormDescription>
+                  </div>
                   <Switch
                     id="custom-expires-date"
-                    checked={customExpireDate}
+                    checked={advancedOptions.showExpireDate}
                     onCheckedChange={(v) => {
                       if (!session) {
-                        setOpen(true);
+                        setFeaturesDialog(true);
                         return;
                       }
-                      setCustomExpireDate(v);
+                      setAdvancedOptions({
+                        ...advancedOptions,
+                        showExpireDate: v,
+                      });
+                      // setCustomExpireDate(v);
                     }}
                   />
                 </div>
-                {customExpireDate && (
+                {advancedOptions.showExpireDate && (
                   <FormField
                     control={form.control}
                     name="expires_at"
@@ -248,20 +290,32 @@ export function CreateLinkForm({
               </div>
               <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password-protected">Password Protected</Label>
+                  <div className="space-y-0.5">
+                    <Label htmlFor="password-protected">
+                      Password Protected
+                    </Label>
+                    <FormDescription className="text-xs">
+                      Establish a password to protect your link from other
+                      users.
+                    </FormDescription>
+                  </div>
                   <Switch
                     id="password-protected"
-                    checked={passwordProtected}
+                    checked={advancedOptions.passwordProtected}
                     onCheckedChange={(v) => {
                       if (!session) {
-                        setOpen(true);
+                        setFeaturesDialog(true);
                         return;
                       }
-                      setPasswordProtected(v);
+                      // setPasswordProtected(v);
+                      setAdvancedOptions({
+                        ...advancedOptions,
+                        passwordProtected: v,
+                      });
                     }}
                   />
                 </div>
-                {passwordProtected && (
+                {advancedOptions.passwordProtected && (
                   <FormField
                     control={form.control}
                     name="password"
@@ -297,12 +351,12 @@ export function CreateLinkForm({
                     <FormControl>
                       <Switch
                         checked={field.value}
-                        onCheckedChange={() => {
+                        onCheckedChange={(e) => {
                           if (!session) {
-                            setOpen(true);
+                            setFeaturesDialog(true);
                             return;
                           }
-                          field.onChange;
+                          field.onChange(e);
                         }}
                       />
                     </FormControl>
@@ -327,7 +381,7 @@ export function CreateLinkForm({
         {!session && (
           <Button
             type="button"
-            onClick={() => setOpen(true)}
+            onClick={() => setFeaturesDialog(true)}
             variant="link"
             className="w-full"
           >

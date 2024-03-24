@@ -6,7 +6,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  previewFeatures = ["driverAdapters", "relationJoins"]
 }
 
 datasource db {
@@ -28,16 +28,18 @@ model Link {
   id         String         @id
   slug       String         @unique
   url        String
-  expires_at DateTime
+  expires_at DateTime?
+  created_at DateTime       @default(now())
   user       User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String?
   settings   LinkSettings[]
 }
 
 model LinkSettings {
-  link_id  String  @unique
-  password String?
-  link     Link    @relation(fields: [link_id], references: [id], onDelete: Cascade)
+  link_id              String  @unique
+  allowUnauthenticated Boolean
+  password             String?
+  link                 Link    @relation(fields: [link_id], references: [id], onDelete: Cascade)
 }
 
 model Session {

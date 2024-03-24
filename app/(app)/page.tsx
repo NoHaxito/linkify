@@ -1,4 +1,4 @@
-import { CreateLinkForm } from "@/components/forms/create-link";
+import { LinkForm } from "@/components/forms/link-form";
 import { validateRequest } from "@/lib/auth";
 import { generateRandomString } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ export default async function Home() {
             Free, unlimited url shortener.
           </p>
           <div className="max-h-96 w-full pb-10">
-            <CreateLinkForm randomSlug={randomSlug} session={session} />
+            <LinkForm randomSlug={randomSlug} session={session} />
           </div>
         </div>
       </div>
