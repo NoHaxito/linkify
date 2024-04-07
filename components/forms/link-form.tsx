@@ -41,6 +41,7 @@ import { Label } from "@/components/ui/label";
 import { addDay, format } from "@formkit/tempo";
 import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 // import { useAuth } from "@/store/auth";
 
 export const createLinkSchema = z.object({
@@ -56,9 +57,12 @@ export type CreateLinkSchema = z.infer<typeof createLinkSchema>;
 export function LinkForm({
   randomSlug,
   session,
+  closeDialogButton,
 }: {
   randomSlug: string;
-  session: Session | null;
+  session: Session | null | true;
+  loggedIn?: boolean;
+  closeDialogButton?: React.ReactNode;
 }) {
   const [link, setLink] = useState<{
     success: boolean;
@@ -67,6 +71,7 @@ export function LinkForm({
     success: false,
     link: null,
   });
+  const router = useRouter();
   const [advancedOptions, setAdvancedOptions] = useState({
     showExpireDate: true,
     passwordProtected: false,
@@ -95,8 +100,6 @@ export function LinkForm({
       });
       return;
     }
-    console.log(values);
-
     const res = await fetch("/api/link/create", {
       method: "POST",
       headers: {
@@ -114,6 +117,7 @@ export function LinkForm({
         description: res.link,
         icon: <PartyPopper className="h-4 w-4" />,
       });
+      router.refresh();
     }
   }
   const setFeaturesDialog = useFeaturesDialog((state) => state.setOpen);
@@ -377,7 +381,7 @@ export function LinkForm({
           )}
           Create Link
         </Button>
-
+        {closeDialogButton}
         {!session && (
           <Button
             type="button"

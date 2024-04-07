@@ -3,18 +3,13 @@ import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
-import GithubIcon from "@/components/icons/github";
-import { Button, buttonVariants } from "@/components/ui/button";
-import Link from "next/link";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { LucideLink } from "lucide-react";
 
 const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 export const metadata: Metadata = {
-  title: "Auth - Linkify",
+  title: "Linkify",
   description: "Make your links mini mighty",
 };
 

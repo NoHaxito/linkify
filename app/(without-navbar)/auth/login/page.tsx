@@ -1,7 +1,13 @@
 import GithubIcon from "@/components/icons/github";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Auth - Linkify",
+  description: "Make your links mini mighty",
+};
 
 export default async function Home() {
   return (
