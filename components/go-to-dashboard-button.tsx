@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 
 export function GoToDashboardButton() {
   const pathname = usePathname();
-  if (pathname.startsWith("/dash")) return null;
+  if (pathname.startsWith("/dashboard")) return null;
   return (
     <Link
-      href="/dash"
+      href="/dashboard"
       className={cn(
         "!rounded-xl",
         buttonVariants({ size: "sm", variant: "secondary" }),
