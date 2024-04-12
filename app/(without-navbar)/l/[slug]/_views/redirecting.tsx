@@ -1,14 +1,10 @@
-"use client";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { redirect } from "next/navigation";
 
 export function RedirectingView({ url }: { url: string }) {
-  const router = useRouter();
-  useEffect(() => {
-    router.push(url);
-  });
+  redirect(url);
+
   return (
     <Card className="w-[95%] max-w-sm">
       <CardHeader>
