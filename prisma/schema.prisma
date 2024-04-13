@@ -32,14 +32,31 @@ model Link {
   created_at DateTime       @default(now())
   user       User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
   user_id    String?
-  settings   LinkSettings[]
+  settings   LinkSettings?
+  analytics  LinkAnalytics?
+}
+
+model LinkAnalytics {
+  link_id String               @id
+  visits  LinkAnalyticsVisit[]
+  link    Link                 @relation(fields: [link_id], references: [id], onDelete: Cascade)
+}
+
+model LinkAnalyticsVisit {
+  id           Int           @id @unique @default(autoincrement())
+  country      String
+  user_email   String?
+  visited_at   DateTime      @default(now())
+  analytics_id LinkAnalytics @relation(fields: [link_id], references: [link_id])
+  link_id      String
 }
 
 model LinkSettings {
-  link_id              String  @id @unique
+  link_id              String   @id @unique
   allowUnauthenticated Boolean
   password             String?
-  link                 Link    @relation(fields: [link_id], references: [id], onDelete: Cascade)
+  custom_metadata      Boolean?
+  link                 Link     @relation(fields: [link_id], references: [id], onDelete: Cascade)
 }
 
 model Session {

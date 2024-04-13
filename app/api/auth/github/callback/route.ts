@@ -18,13 +18,25 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   try {
     const tokens = await github.validateAuthorizationCode(code);
-    const githubUserResponse = await fetch("https://api.github.com/user", {
+    const githubUser: GitHubUser = await fetch("https://api.github.com/user", {
       headers: {
         Authorization: `Bearer ${tokens.accessToken}`,
       },
-    });
-    const githubUser: GitHubUser = await githubUserResponse.json();
-
+    }).then((res) => res.json());
+    let githubUserEmail = githubUser.email;
+    const githubUserEmails: GithubEmails[] = await fetch(
+      "https://api.github.com/user/emails",
+      {
+        headers: {
+          Authorization: `Bearer ${tokens.accessToken}`,
+        },
+      },
+    ).then((res) => res.json());
+    if (githubUserEmail === null) {
+      githubUserEmail =
+        githubUserEmails.find((email) => email.verified)?.email ||
+        githubUserEmails[0].email;
+    }
     const existingUser = await db.user.findFirst({
       where: { github_id: githubUser.id },
     });
@@ -51,7 +63,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         id: userId,
         github_id: githubUser.id,
         username: githubUser.login,
-        email: githubUser.email,
+        email: githubUserEmail,
         avatar_url: githubUser.avatar_url,
       },
     });
@@ -75,11 +87,11 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (e instanceof OAuth2RequestError) {
       // invalid code
       return NextResponse.redirect(
-        `${request.nextUrl.origin}/auth/login?error=${e.message}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`,
       );
     }
     return NextResponse.redirect(
-      `${request.nextUrl.origin}/auth/login?error=${e.message}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`,
     );
   }
 }
@@ -87,6 +99,12 @@ export async function GET(request: NextRequest): Promise<Response> {
 interface GitHubUser {
   id: number;
   login: string;
-  email: string;
+  email: string | null;
   avatar_url: string;
+}
+interface GithubEmails {
+  email: string;
+  primary: boolean;
+  verified: boolean;
+  visibility: string;
 }

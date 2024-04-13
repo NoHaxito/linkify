@@ -58,11 +58,13 @@ export function LinkForm({
   randomSlug,
   session,
   closeDialogButton,
+  callback,
 }: {
   randomSlug: string;
   session: Session | null | true;
   loggedIn?: boolean;
   closeDialogButton?: React.ReactNode;
+  callback?: () => void;
 }) {
   const [link, setLink] = useState<{
     success: boolean;
@@ -117,6 +119,7 @@ export function LinkForm({
         description: res.link,
         icon: <PartyPopper className="h-4 w-4" />,
       });
+      if (callback) callback?.();
       router.refresh();
     }
   }
@@ -370,18 +373,19 @@ export function LinkForm({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-
-        <Button
-          disabled={form.formState.isSubmitting}
-          type="submit"
-          className="w-full"
-        >
-          {form.formState.isSubmitting && (
-            <Loader2 className="size-4 animate-spin" />
-          )}
-          Create Link
-        </Button>
-        {closeDialogButton}
+        <div className="flex flex-col gap-1">
+          <Button
+            disabled={form.formState.isSubmitting}
+            type="submit"
+            className="w-full"
+          >
+            {form.formState.isSubmitting && (
+              <Loader2 className="size-4 animate-spin" />
+            )}
+            Create Link
+          </Button>
+          {closeDialogButton}
+        </div>
         {!session && (
           <Button
             type="button"

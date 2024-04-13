@@ -26,7 +26,7 @@ export default async function RootLayout({
   // const auth = await validateRequest();
   // console.log(auth);
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",

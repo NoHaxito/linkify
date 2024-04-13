@@ -15,7 +15,7 @@ export async function Navbar() {
         <div className="mr-4">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <LucideLink className="size-5" />
-            <span className="hidden font-bold sm:inline-block">Linkify</span>
+            <span className="font-bold">Linkify</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">

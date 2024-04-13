@@ -26,6 +26,11 @@ export default async function Home() {
     },
     include: {
       settings: true,
+      analytics: {
+        include: {
+          visits: true,
+        },
+      },
     },
   });
   return (
@@ -44,9 +49,16 @@ export default async function Home() {
           </LinkCreateDialog>
         </PageHeaderActions>
       </PageHeader>
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {links.map((link) => (
-          <LinkCard key={link.id} {...link} />
+          <LinkCard
+            key={link.id}
+            link={{
+              ...link,
+              analytics: link.analytics,
+              settings: link.settings,
+            }}
+          />
         ))}
       </div>
     </>

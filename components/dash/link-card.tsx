@@ -24,12 +24,15 @@ import { toast } from "sonner";
 import NextLink from "next/link";
 import { cn } from "@/lib/utils";
 import { LinkDeleteDialog } from "./link-delete-dialog";
+import { LinkAnalyticsDialog } from "./link-analytics-dialog";
+import { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
 }
 
-export function LinkCard({ slug, created_at, id }: Link) {
+export function LinkCard({ link }: { link: LinkProps }) {
+  const { slug, created_at } = link;
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}`);
@@ -64,7 +67,7 @@ export function LinkCard({ slug, created_at, id }: Link) {
         <Button variant="ghost" className="size-6" size="icon">
           <Pencil className="size-3.5" />
         </Button>
-        <LinkDeleteDialog slug={slug} id={id}>
+        <LinkDeleteDialog slug={slug} id={link.id}>
           <Button variant="ghost" className="size-6" size="icon">
             <Trash className="size-3.5" />
           </Button>
@@ -86,14 +89,23 @@ export function LinkCard({ slug, created_at, id }: Link) {
           <ExternalLink className="size-3.5" />
         </NextLink>
         <div className="ml-auto flex items-center gap-3">
-          <Button
-            disabled
-            variant="ghost"
-            size="sm"
-            className="h-8 p-0 sm:px-3 sm:after:content-['Analytics']"
+          <LinkAnalyticsDialog
+            link={{
+              ...link,
+              analytics: link.analytics,
+              settings: link.settings,
+            }}
+            id={link.id}
+            slug={slug}
           >
-            <BarChart3 className="size-4" />
-          </Button>
+            <Button
+              variant="link"
+              size="xs"
+              className="h-8 p-0 sm:after:content-['Analytics']"
+            >
+              <BarChart3 className="size-4" />
+            </Button>
+          </LinkAnalyticsDialog>
           <Separator className="h-4" orientation="vertical" />
           <span className="text-xs text-muted-foreground">
             {format(created_at, "D MMMM YYYY")}

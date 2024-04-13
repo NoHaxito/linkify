@@ -44,6 +44,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
             <LinkForm
               session={true} // this means the user is logged in (refactor later)
               randomSlug={generateRandomString(6)}
+              callback={() => setOpen(false)}
               closeDialogButton={
                 <DialogClose asChild>
                   <Button size="sm" variant="outline">
@@ -72,6 +73,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
           <LinkForm
             session={true} // this means the user is logged in (refactor later)
             randomSlug={generateRandomString(6)}
+            callback={() => setOpen(false)}
             closeDialogButton={
               <DrawerClose asChild>
                 <Button size="sm" variant="outline">

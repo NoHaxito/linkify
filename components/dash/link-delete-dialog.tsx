@@ -1,9 +1,7 @@
 "use client";
 import * as React from "react";
-
-import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -24,15 +22,9 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  BarChart3,
-  CalendarClock,
-  Cloud,
-  Globe,
-  Key,
-  Trash,
-} from "lucide-react";
-import Link from "next/link";
+import { Loader2, Trash } from "lucide-react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function LinkDeleteDialog({
   children,
@@ -43,8 +35,30 @@ export function LinkDeleteDialog({
   slug: string;
   id: string;
 }) {
+  const [loading, setLoading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
+  const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
+  async function deleteLink() {
+    setLoading(true);
+    const res = await fetch(`/api/link/${id}/delete`, {
+      method: "DELETE",
+    }).then((res) => res.json());
+    if (res.error) {
+      toast.error("Failed to delete link", {
+        description: res.message,
+      });
+      setLoading(false);
+      return;
+    } else {
+      toast.success("Your link has been deleted", {
+        description: res.link,
+      });
+      router.refresh();
+      setOpen(false);
+      setLoading(false);
+    }
+  }
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
@@ -58,19 +72,34 @@ export function LinkDeleteDialog({
             </DialogDescription>
           </DialogHeader>
 
-          <div>
-            <DialogFooter>
+          <DialogFooter className="flex-col sm:flex-col">
+            <div className="flex items-center justify-end gap-1">
               <DialogClose asChild>
-                <Button size="sm" variant="outline">
+                <Button disabled={loading} size="sm" variant="outline">
                   Cancel
                 </Button>
               </DialogClose>
-              <Button variant="destructive" size="sm">
-                <Trash className="size-4" />
+              <Button
+                onClick={deleteLink}
+                disabled={loading}
+                variant="destructive"
+                size="sm"
+              >
+                {loading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Trash className="size-4" />
+                )}
                 Delete
               </Button>
-            </DialogFooter>
-          </div>
+            </div>
+            {loading && (
+              <div className="flex items-center gap-1 pt-2 text-sm text-muted-foreground">
+                <Loader2 className="size-4 animate-spin " />
+                Deleting link, please wait and don&apos;t close this dialog.
+              </div>
+            )}
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
@@ -89,15 +118,30 @@ export function LinkDeleteDialog({
         </DrawerHeader>
 
         <DrawerFooter>
-          <Button variant="destructive" size="sm">
-            <Trash className="size-4" />
+          <Button
+            onClick={deleteLink}
+            disabled={loading}
+            variant="destructive"
+            size="sm"
+          >
+            {loading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Trash className="size-4" />
+            )}
             Delete
           </Button>
           <DrawerClose asChild>
-            <Button size="sm" variant="outline">
+            <Button disabled={loading} size="sm" variant="outline">
               Cancel
             </Button>
           </DrawerClose>
+          {loading && (
+            <div className="flex items-center gap-1 pt-2 text-sm text-muted-foreground">
+              <Loader2 className="size-4 min-w-4 animate-spin " />
+              Deleting link, please wait and don&apos;t close this dialog.
+            </div>
+          )}
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

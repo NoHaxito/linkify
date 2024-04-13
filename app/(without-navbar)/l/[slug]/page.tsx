@@ -26,13 +26,18 @@ export default async function LinkRedirectPage({
     },
     include: {
       settings: true,
+      analytics: {
+        include: {
+          visits: true,
+        },
+      },
     },
   });
   if (!link) return notFound();
   const { session } = await validateRequest();
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-3">
-      {!link.settings[0].allowUnauthenticated && !session ? (
+      {!link.settings?.allowUnauthenticated && !session ? (
         <>
           <Card className="w-[95%] max-w-sm">
             <CardHeader>
@@ -49,7 +54,7 @@ export default async function LinkRedirectPage({
             </CardFooter>
           </Card>
         </>
-      ) : link.settings[0].password ? (
+      ) : link.settings?.password ? (
         <>
           <Card className="w-[95%] max-w-sm">
             <CardHeader>
@@ -71,7 +76,13 @@ export default async function LinkRedirectPage({
           </Card>
         </>
       ) : (
-        <RedirectingView url={link.url} />
+        <RedirectingView
+          link={{
+            ...link,
+            analytics: link.analytics,
+            settings: link.settings,
+          }}
+        />
       )}
     </div>
   );

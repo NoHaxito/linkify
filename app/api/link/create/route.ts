@@ -41,7 +41,6 @@ export async function POST(request: Request) {
       link: `${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}`,
     });
   } catch (error) {
-    console.log(error);
     if (error instanceof PrismaClientKnownRequestError) {
       return NextResponse.json({
         error: true,
