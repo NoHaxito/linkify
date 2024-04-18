@@ -13,6 +13,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,6 +22,7 @@ import {
   Drawer,
   DrawerContent,
   DrawerDescription,
+  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
@@ -100,8 +102,8 @@ export function LinkAnalyticsDialog({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="max-h-[90%] overflow-auto sm:max-w-2xl">
-          <DialogHeader>
+        <DialogContent className="max-h-[90%] overflow-auto pb-0 pt-0 sm:max-w-2xl">
+          <DialogHeader className="sticky -top-0.5 z-10 bg-background py-6">
             <DialogTitle>Analytics</DialogTitle>
             <DialogDescription>
               Viewing analytics for link <strong>{slug}</strong>
@@ -109,21 +111,19 @@ export function LinkAnalyticsDialog({
           </DialogHeader>
           {loading ? (
             <Loader2 className="size-6 animate-spin" />
-          ) : !link.analytics ? (
-            <X className="size-6" />
           ) : (
             <div className="overflow-auto">
               <Tabs variant="underline" defaultValue="day">
                 <TabsList>
                   <TabsTrigger
-                    disabled={link.analytics.visits.length === 0}
+                    disabled={link.analytics?.visits.length === 0}
                     value="day"
                   >
                     <CalendarFold className="size-4" />
                     Per Day
                   </TabsTrigger>
                   <TabsTrigger
-                    disabled={link.analytics.visits.length === 0}
+                    disabled={link.analytics?.visits.length === 0}
                     value="country"
                   >
                     <Globe className="size-4" />
@@ -229,13 +229,12 @@ export function LinkAnalyticsDialog({
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[200px]">User Email</TableHead>
                     <TableHead>Country</TableHead>
                     <TableHead className="text-right">Date</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {link.analytics.visits.length === 0 ? (
+                  {link.analytics?.visits.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={3} className="h-16 text-center">
                         No analytics found
@@ -244,7 +243,6 @@ export function LinkAnalyticsDialog({
                   ) : (
                     link.analytics?.visits.map((visit) => (
                       <TableRow key={visit.id}>
-                        <TableCell className="font-medium">Anonymous</TableCell>
                         <TableCell>{visit.country}</TableCell>
                         <TableCell className="text-right">
                           {format(visit.visited_at, "D MMMM YYYY")}
@@ -256,6 +254,11 @@ export function LinkAnalyticsDialog({
               </Table>
             </div>
           )}
+          <DialogFooter className="sticky bottom-0 bg-background py-2">
+            <p className="text-sm text-muted-foreground">
+              This analytics may not be accurate
+            </p>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     );
@@ -275,23 +278,19 @@ export function LinkAnalyticsDialog({
           <div className="flex h-36 w-full items-center justify-center">
             <Loader2 className="size-6 animate-spin" />
           </div>
-        ) : !link.analytics ? (
-          <div className="flex h-36 w-full items-center justify-center">
-            <X className="size-6" />
-          </div>
         ) : (
           <div className="overflow-auto px-3">
             <Tabs variant="underline" defaultValue="day">
               <TabsList>
                 <TabsTrigger
-                  disabled={link.analytics.visits.length === 0}
+                  disabled={link.analytics?.visits.length === 0}
                   value="day"
                 >
                   <CalendarFold className="size-4" />
                   Per Day
                 </TabsTrigger>
                 <TabsTrigger
-                  disabled={link.analytics.visits.length === 0}
+                  disabled={link.analytics?.visits.length === 0}
                   value="country"
                 >
                   <Globe className="size-4" />
@@ -393,13 +392,12 @@ export function LinkAnalyticsDialog({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[200px]">User Email</TableHead>
                   <TableHead>Country</TableHead>
                   <TableHead className="text-right">Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {link.analytics.visits.length === 0 ? (
+                {link.analytics?.visits.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={3} className="h-16 text-center">
                       No analytics found
@@ -408,7 +406,6 @@ export function LinkAnalyticsDialog({
                 ) : (
                   link.analytics?.visits.map((visit) => (
                     <TableRow key={visit.id}>
-                      <TableCell className="font-medium">Anonymous</TableCell>
                       <TableCell>{visit.country}</TableCell>
                       <TableCell className="text-right">
                         {format(visit.visited_at, "D MMMM YYYY")}
@@ -420,6 +417,11 @@ export function LinkAnalyticsDialog({
             </Table>
           </div>
         )}
+        <DrawerFooter className="">
+          <p className="text-sm text-muted-foreground">
+            This analytics may not be accurate
+          </p>
+        </DrawerFooter>
       </DrawerContent>
     </Drawer>
   );

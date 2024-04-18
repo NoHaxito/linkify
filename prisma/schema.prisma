@@ -25,15 +25,16 @@ model User {
 }
 
 model Link {
-  id         String         @id
-  slug       String         @unique
-  url        String
-  expires_at DateTime?
-  created_at DateTime       @default(now())
-  user       User?          @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  user_id    String?
-  settings   LinkSettings?
-  analytics  LinkAnalytics?
+  id               String               @id
+  slug             String               @unique
+  url              String
+  expires_at       DateTime?
+  created_at       DateTime             @default(now())
+  user             User?                @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id          String?
+  settings         LinkSettings?
+  analytics        LinkAnalytics?
+  analytics_visits LinkAnalyticsVisit[]
 }
 
 model LinkAnalytics {
@@ -45,9 +46,9 @@ model LinkAnalytics {
 model LinkAnalyticsVisit {
   id           Int           @id @unique @default(autoincrement())
   country      String
-  user_email   String?
   visited_at   DateTime      @default(now())
-  analytics_id LinkAnalytics @relation(fields: [link_id], references: [link_id])
+  analytics_id LinkAnalytics @relation(fields: [link_id], references: [link_id], onDelete: Cascade)
+  link         Link?         @relation(fields: [link_id], references: [id], onDelete: Cascade)
   link_id      String
 }
 

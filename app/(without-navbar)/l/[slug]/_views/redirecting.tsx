@@ -9,6 +9,7 @@ import {
 } from "@prisma/client";
 import { User } from "lucia";
 import { Loader2 } from "lucide-react";
+import { headers } from "next/headers";
 import { redirect as nextRedirect } from "next/navigation";
 
 export interface LinkProps extends Link {
@@ -21,16 +22,25 @@ async function saveAnalytics(
   saveAnalytics?: boolean,
 ) {
   if (saveAnalytics) {
-    const countryInfo: Country = await fetch("http://ip-api.com/json").then(
-      (res) => res.json(),
-    );
+    const headers_raw = headers();
+    const countryInfo: Country = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/get-request-info`,
+      {
+        credentials: "same-origin",
+        headers: {
+          "x-forwarded-for": headers_raw.get("x-forwarded-for") ?? "",
+        },
+      },
+    ).then((res) => res.json());
+    if (!countryInfo.country || !countryInfo.countryCode) {
+      return;
+    }
     if (!link?.analytics) {
       await db.linkAnalytics.create({
         data: {
           link_id: link!.id,
           visits: {
             create: {
-              user_email: user?.email,
               country: `${countryInfo.country} (${countryInfo.countryCode})`,
             },
           },
@@ -52,7 +62,6 @@ async function saveAnalytics(
         data: {
           visits: {
             create: {
-              user_email: user?.email,
               country: `${countryInfo.country} (${countryInfo.countryCode})`,
             },
           },
