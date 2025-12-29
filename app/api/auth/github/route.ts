@@ -1,7 +1,8 @@
 // app/login/github/route.ts
-import { github } from "@/lib/auth";
+
 import { generateState } from "arctic";
 import { cookies } from "next/headers";
+import { github } from "@/lib/auth";
 
 export async function GET(): Promise<Response> {
   const state = generateState();
@@ -9,7 +10,7 @@ export async function GET(): Promise<Response> {
     scopes: ["user:email"],
   });
 
-  cookies().set("github_oauth_state", state, {
+  (await cookies()).set("github_oauth_state", state, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,

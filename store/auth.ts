@@ -1,4 +1,4 @@
-import type { User, Session } from "lucia";
+import type { Session, User } from "lucia";
 
 import { create } from "zustand";
 

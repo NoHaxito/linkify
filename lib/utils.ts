@@ -4,7 +4,7 @@ import { twMerge } from "tailwind-merge";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-export function generateRandomString(length: number = 6) {
+export function generateRandomString(length = 6) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -13,7 +13,7 @@ export function generateRandomString(length: number = 6) {
   }
   return result;
 }
-export function slugify(text: string, separator: string = "-") {
+export function slugify(text: string, separator = "-") {
   const textArray = text.split(" ");
   return textArray.join(separator);
 }

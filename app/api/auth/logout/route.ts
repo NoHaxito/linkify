@@ -1,6 +1,6 @@
-import { lucia, validateRequest } from "@/lib/auth";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { lucia, validateRequest } from "@/lib/auth";
 
 export async function GET() {
   const { session } = await validateRequest();
@@ -10,10 +10,10 @@ export async function GET() {
   await lucia.invalidateSession(session.id);
 
   const sessionCookie = lucia.createBlankSessionCookie();
-  cookies().set(
+  (await cookies()).set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
   return redirect("/auth/login");
 }

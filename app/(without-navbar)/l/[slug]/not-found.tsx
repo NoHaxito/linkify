@@ -1,14 +1,13 @@
+import { Home, Sparkles } from "lucide-react";
+import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Home, Sparkles } from "lucide-react";
-import Link from "next/link";
 export default function LinkNotFound() {
   return (
     <div className="flex h-screen w-full items-center justify-center">
@@ -24,23 +23,23 @@ export default function LinkNotFound() {
         </CardHeader>
         <CardFooter className="grid pb-0">
           <Link
-            href="/"
             className={buttonVariants({
               variant: "secondary",
               size: "sm",
               className: "w-full",
             })}
+            href="/"
           >
             <Home className="size-4" />
             Go home
           </Link>
           <Link
-            href="/dashboard"
             className={buttonVariants({
               variant: "link",
               size: "sm",
-              className: "w-full !text-muted-foreground hover:!text-primary",
+              className: "!text-muted-foreground hover:!text-primary w-full",
             })}
+            href="/dashboard"
           >
             or back to dashboard
           </Link>

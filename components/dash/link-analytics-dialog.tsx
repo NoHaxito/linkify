@@ -1,6 +1,7 @@
 "use client";
-import * as React from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { format } from "@formkit/tempo";
+import { CalendarFold, Globe, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Bar,
   BarChart,
@@ -9,6 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import type { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
 import {
   Dialog,
   DialogContent,
@@ -35,59 +37,58 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { CalendarFold, Globe, Loader2, X } from "lucide-react";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
-import { format } from "@formkit/tempo";
 
 export function LinkAnalyticsDialog({
   children,
   slug,
-  id,
   link,
 }: {
   children: React.ReactNode;
   slug: string;
-  id: string;
   link: LinkProps;
 }) {
-  const [loading, setLoading] = React.useState(true);
-  const [open, setOpen] = React.useState(false);
+  const [loading, setLoading] = useState(true);
+  const [open, setOpen] = useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const [analytics, setAnalytics] = React.useState<{
+  const [analytics, setAnalytics] = useState<{
     perDay: { day: string; count: number }[];
     perCountry: { country: string; count: number }[];
   }>({
     perDay: [],
     perCountry: [],
   });
-  React.useEffect(() => {
-    if (!open) return;
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
     const dateCounts: Record<string, number> = {};
     const countryCounts: Record<string, number> = {};
 
-    link?.analytics?.visits.forEach((item) => {
-      // Extraer solo la fecha del objeto de fecha y hora
-      const date = format(item.visited_at, "D/MM/YYYY");
-      const country = item.country.split("(")[0].trim();
-      // Incrementar el contador para esa fecha
-      if (dateCounts[date]) {
-        dateCounts[date]++;
-      } else {
-        dateCounts[date] = 1;
+    if (link?.analytics?.visits) {
+      for (const item of link.analytics.visits) {
+        // Extraer solo la fecha del objeto de fecha y hora
+        const date = format(item.visited_at, "D/MM/YYYY");
+        const country = item.country.split("(")[0].trim();
+        // Incrementar el contador para esa fecha
+        if (dateCounts[date]) {
+          dateCounts[date]++;
+        } else {
+          dateCounts[date] = 1;
+        }
+        if (countryCounts[country]) {
+          countryCounts[country]++;
+        } else {
+          countryCounts[country] = 1;
+        }
       }
-      if (countryCounts[country]) {
-        countryCounts[country]++;
-      } else {
-        countryCounts[country] = 1;
-      }
-    });
+    }
     const formattedDateCounts = Object.keys(dateCounts).map((day) => {
-      return { day: day, count: dateCounts[day] };
+      return { day, count: dateCounts[day] };
     });
     const formattedDateCountries = Object.keys(countryCounts).map((country) => {
-      return { country: country, count: countryCounts[country] };
+      return { country, count: countryCounts[country] };
     });
 
     setAnalytics({
@@ -96,14 +97,14 @@ export function LinkAnalyticsDialog({
     });
 
     setLoading(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, link?.analytics?.visits.forEach, link?.analytics?.visits]);
+
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="max-h-[90%] overflow-auto pb-0 pt-0 sm:max-w-2xl">
-          <DialogHeader className="sticky -top-0.5 z-10 bg-background py-6">
+        <DialogContent className="max-h-[90%] overflow-auto pt-0 pb-0 sm:max-w-2xl">
+          <DialogHeader className="sticky -top-0.5 z-10 bg-background pt-6">
             <DialogTitle>Analytics</DialogTitle>
             <DialogDescription>
               Viewing analytics for link <strong>{slug}</strong>
@@ -113,8 +114,8 @@ export function LinkAnalyticsDialog({
             <Loader2 className="size-6 animate-spin" />
           ) : (
             <div className="overflow-auto">
-              <Tabs variant="underline" defaultValue="day">
-                <TabsList>
+              <Tabs defaultValue="day" variant="underline">
+                <TabsList className="w-full justify-start rounded-none border-b">
                   <TabsTrigger
                     disabled={link.analytics?.visits.length === 0}
                     value="day"
@@ -137,20 +138,17 @@ export function LinkAnalyticsDialog({
                         No analytics found
                       </div>
                     ) : (
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer height="100%" width="100%">
                         <BarChart data={analytics?.perDay}>
                           <XAxis dataKey="day" />
                           <YAxis />
                           <Tooltip
-                            cursor={{
-                              fill: "hsl(var(--accent))",
-                            }}
                             content={({ active, payload, label }) => {
                               if (active && payload && payload.length) {
                                 return (
                                   <div className="overflow-hidden">
                                     <div className="rounded-lg border bg-popover p-2">
-                                      <p className="text-md font-bold">
+                                      <p className="font-bold text-md">
                                         {label}
                                       </p>
                                       <span className="text-sm">
@@ -161,6 +159,9 @@ export function LinkAnalyticsDialog({
                                 );
                               }
                               return null;
+                            }}
+                            cursor={{
+                              fill: "hsl(var(--accent))",
                             }}
                           />
                           <Bar
@@ -184,20 +185,17 @@ export function LinkAnalyticsDialog({
                         No analytics found
                       </div>
                     ) : (
-                      <ResponsiveContainer width="100%" height="100%">
+                      <ResponsiveContainer height="100%" width="100%">
                         <BarChart data={analytics?.perCountry}>
                           <XAxis dataKey="country" />
                           <YAxis />
                           <Tooltip
-                            cursor={{
-                              fill: "hsl(var(--accent))",
-                            }}
                             content={({ active, payload, label }) => {
                               if (active && payload && payload.length) {
                                 return (
                                   <div className="overflow-hidden">
                                     <div className="rounded-lg border bg-popover p-2">
-                                      <p className="text-md font-bold">
+                                      <p className="font-bold text-md">
                                         {label}
                                       </p>
                                       <span className="text-sm">
@@ -208,6 +206,9 @@ export function LinkAnalyticsDialog({
                                 );
                               }
                               return null;
+                            }}
+                            cursor={{
+                              fill: "hsl(var(--accent))",
                             }}
                           />
                           <Bar
@@ -225,7 +226,7 @@ export function LinkAnalyticsDialog({
                   </div>
                 </TabsContent>
               </Tabs>
-              <h3 className="my-2 text-lg font-bold">All time data</h3>
+              <h3 className="my-2 font-bold text-lg">All time data</h3>
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -236,7 +237,7 @@ export function LinkAnalyticsDialog({
                 <TableBody>
                   {link.analytics?.visits.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={3} className="h-16 text-center">
+                      <TableCell className="h-16 text-center" colSpan={3}>
                         No analytics found
                       </TableCell>
                     </TableRow>
@@ -255,7 +256,7 @@ export function LinkAnalyticsDialog({
             </div>
           )}
           <DialogFooter className="sticky bottom-0 bg-background py-2">
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               This analytics may not be accurate
             </p>
           </DialogFooter>
@@ -265,7 +266,7 @@ export function LinkAnalyticsDialog({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent className="max-h-[96%]">
         <DrawerHeader className="text-left">
@@ -280,7 +281,7 @@ export function LinkAnalyticsDialog({
           </div>
         ) : (
           <div className="overflow-auto px-3">
-            <Tabs variant="underline" defaultValue="day">
+            <Tabs defaultValue="day" variant="underline">
               <TabsList>
                 <TabsTrigger
                   disabled={link.analytics?.visits.length === 0}
@@ -304,20 +305,17 @@ export function LinkAnalyticsDialog({
                       No analytics found
                     </div>
                   ) : (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer height="100%" width="100%">
                       <BarChart data={analytics?.perDay}>
                         <XAxis dataKey="day" />
                         <YAxis />
                         <Tooltip
-                          cursor={{
-                            fill: "hsl(var(--accent))",
-                          }}
                           content={({ active, payload, label }) => {
                             if (active && payload && payload.length) {
                               return (
                                 <div className="overflow-hidden">
                                   <div className="rounded-lg border bg-popover p-2">
-                                    <p className="text-md font-bold">{label}</p>
+                                    <p className="font-bold text-md">{label}</p>
                                     <span className="text-sm">
                                       {payload[0].value} visits
                                     </span>
@@ -326,6 +324,9 @@ export function LinkAnalyticsDialog({
                               );
                             }
                             return null;
+                          }}
+                          cursor={{
+                            fill: "hsl(var(--accent))",
                           }}
                         />
                         <Bar
@@ -349,20 +350,17 @@ export function LinkAnalyticsDialog({
                       No analytics found
                     </div>
                   ) : (
-                    <ResponsiveContainer width="100%" height="100%">
+                    <ResponsiveContainer height="100%" width="100%">
                       <BarChart data={analytics?.perCountry}>
                         <XAxis dataKey="country" />
                         <YAxis />
                         <Tooltip
-                          cursor={{
-                            fill: "hsl(var(--accent))",
-                          }}
                           content={({ active, payload, label }) => {
                             if (active && payload && payload.length) {
                               return (
                                 <div className="overflow-hidden">
                                   <div className="rounded-lg border bg-popover p-2">
-                                    <p className="text-md font-bold">{label}</p>
+                                    <p className="font-bold text-md">{label}</p>
                                     <span className="text-sm">
                                       {payload[0].value} visits
                                     </span>
@@ -371,6 +369,9 @@ export function LinkAnalyticsDialog({
                               );
                             }
                             return null;
+                          }}
+                          cursor={{
+                            fill: "hsl(var(--accent))",
                           }}
                         />
                         <Bar
@@ -388,7 +389,7 @@ export function LinkAnalyticsDialog({
                 </div>
               </TabsContent>
             </Tabs>
-            <h3 className="my-2 text-lg font-bold">All time data</h3>
+            <h3 className="my-2 font-bold text-lg">All time data</h3>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -399,7 +400,7 @@ export function LinkAnalyticsDialog({
               <TableBody>
                 {link.analytics?.visits.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={3} className="h-16 text-center">
+                    <TableCell className="h-16 text-center" colSpan={3}>
                       No analytics found
                     </TableCell>
                   </TableRow>
@@ -418,7 +419,7 @@ export function LinkAnalyticsDialog({
           </div>
         )}
         <DrawerFooter className="">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             This analytics may not be accurate
           </p>
         </DrawerFooter>

@@ -1,15 +1,5 @@
 "use client";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { format } from "@formkit/tempo";
-import { Link } from "@prisma/client";
-
 import {
   BarChart3,
   Check,
@@ -18,14 +8,22 @@ import {
   Pencil,
   Trash,
 } from "lucide-react";
-import { Separator } from "../ui/separator";
+import NextLink from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import NextLink from "next/link";
+import type { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
+import { Button, buttonVariants } from "@/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { LinkDeleteDialog } from "./link-delete-dialog";
+import { Separator } from "../ui/separator";
 import { LinkAnalyticsDialog } from "./link-analytics-dialog";
-import { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
+import { LinkDeleteDialog } from "./link-delete-dialog";
 
 function copyToClipboard(text: string) {
   navigator.clipboard.writeText(text);
@@ -52,11 +50,11 @@ export function LinkCard({ link }: { link: LinkProps }) {
       </CardHeader>
       <CardFooter className="p-3">
         <Button
+          className="size-6"
           disabled={copied}
           onClick={handleCopy}
-          variant="ghost"
-          className="size-6"
           size="icon"
+          variant="ghost"
         >
           {copied ? (
             <Check className="size-3.5" />
@@ -64,11 +62,11 @@ export function LinkCard({ link }: { link: LinkProps }) {
             <Copy className="size-3.5" />
           )}
         </Button>
-        <Button variant="ghost" className="size-6" size="icon">
+        <Button className="size-6" size="icon" variant="ghost">
           <Pencil className="size-3.5" />
         </Button>
-        <LinkDeleteDialog slug={slug} id={link.id}>
-          <Button variant="ghost" className="size-6" size="icon">
+        <LinkDeleteDialog id={link.id} slug={slug}>
+          <Button className="size-6" size="icon" variant="ghost">
             <Trash className="size-3.5" />
           </Button>
         </LinkDeleteDialog>
@@ -80,34 +78,34 @@ export function LinkCard({ link }: { link: LinkProps }) {
               variant: "ghost",
               size: "icon",
               className: "h-6 w-6",
-            }),
+            })
           )}
-          target="_blank"
-          rel="noopener noreferrer"
           href={`/l/${slug}`}
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <ExternalLink className="size-3.5" />
         </NextLink>
         <div className="ml-auto flex items-center gap-3">
           <LinkAnalyticsDialog
+            id={link.id}
             link={{
               ...link,
               analytics: link.analytics,
               settings: link.settings,
             }}
-            id={link.id}
             slug={slug}
           >
             <Button
-              variant="link"
-              size="xs"
               className="h-8 p-0 sm:after:content-['Analytics']"
+              size="xs"
+              variant="link"
             >
               <BarChart3 className="size-4" />
             </Button>
           </LinkAnalyticsDialog>
           <Separator className="h-4" orientation="vertical" />
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             {format(created_at, "D MMMM YYYY")}
           </span>
         </div>

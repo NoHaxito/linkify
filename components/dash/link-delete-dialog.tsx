@@ -1,6 +1,8 @@
 "use client";
+import { Loader2, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import * as React from "react";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,9 +24,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Loader2, Trash } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export function LinkDeleteDialog({
   children,
@@ -50,18 +50,17 @@ export function LinkDeleteDialog({
       });
       setLoading(false);
       return;
-    } else {
-      toast.success("Your link has been deleted", {
-        description: res.link,
-      });
-      router.refresh();
-      setOpen(false);
-      setLoading(false);
     }
+    toast.success("Your link has been deleted", {
+      description: res.link,
+    });
+    router.refresh();
+    setOpen(false);
+    setLoading(false);
   }
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
@@ -80,10 +79,10 @@ export function LinkDeleteDialog({
                 </Button>
               </DialogClose>
               <Button
-                onClick={deleteLink}
                 disabled={loading}
-                variant="destructive"
+                onClick={deleteLink}
                 size="sm"
+                variant="destructive"
               >
                 {loading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -94,8 +93,8 @@ export function LinkDeleteDialog({
               </Button>
             </div>
             {loading && (
-              <div className="flex items-center gap-1 pt-2 text-sm text-muted-foreground">
-                <Loader2 className="size-4 animate-spin " />
+              <div className="flex items-center gap-1 pt-2 text-muted-foreground text-sm">
+                <Loader2 className="size-4 animate-spin" />
                 Deleting link, please wait and don&apos;t close this dialog.
               </div>
             )}
@@ -106,7 +105,7 @@ export function LinkDeleteDialog({
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="text-left">
@@ -119,10 +118,10 @@ export function LinkDeleteDialog({
 
         <DrawerFooter>
           <Button
-            onClick={deleteLink}
             disabled={loading}
-            variant="destructive"
+            onClick={deleteLink}
             size="sm"
+            variant="destructive"
           >
             {loading ? (
               <Loader2 className="size-4 animate-spin" />
@@ -137,8 +136,8 @@ export function LinkDeleteDialog({
             </Button>
           </DrawerClose>
           {loading && (
-            <div className="flex items-center gap-1 pt-2 text-sm text-muted-foreground">
-              <Loader2 className="size-4 min-w-4 animate-spin " />
+            <div className="flex items-center gap-1 pt-2 text-muted-foreground text-sm">
+              <Loader2 className="size-4 min-w-4 animate-spin" />
               Deleting link, please wait and don&apos;t close this dialog.
             </div>
           )}

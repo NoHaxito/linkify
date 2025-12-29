@@ -1,13 +1,11 @@
-import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
-import { validateRequest } from "@/lib/auth";
-import { Home, Settings } from "lucide-react";
-import Link from "next/link";
+import type { ReactNode } from "react";
 import { SubNavbar } from "@/components/sub-navbar";
+import { validateRequest } from "@/lib/auth";
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const { session, user } = await validateRequest();
-  if (!session || !user) {
+  if (!(session && user)) {
     redirect("/auth/login");
   }
   return (

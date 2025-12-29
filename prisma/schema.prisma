@@ -6,7 +6,8 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters", "relationJoins"]
+  previewFeatures = ["relationJoins"]
+  output = ""
 }
 
 datasource db {

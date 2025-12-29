@@ -1,9 +1,8 @@
 "use client";
+import { Eye, EyeOff } from "lucide-react";
 import * as React from "react";
-
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
-import { Eye, EyeOff } from "lucide-react";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -16,22 +15,22 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       return (
         <div className="relative">
           <input
-            type={showPassword ? "text" : "password"}
             className={cn(
-              "ease box-border flex h-10 w-full rounded-md border-2 border-input/60 bg-background px-3 py-2 text-sm outline-none transition-all duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:items-center placeholder:text-muted-foreground focus:border-2 focus:border-input disabled:cursor-not-allowed disabled:opacity-50",
-              className,
+              "ease box-border flex h-10 w-full rounded-md border-2 border-input/60 bg-background px-3 py-2 text-sm outline-none transition-all duration-300 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:items-center placeholder:text-muted-foreground focus:border-2 focus:border-input disabled:cursor-not-allowed disabled:opacity-50",
+              className
             )}
             placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
             ref={ref}
+            type={showPassword ? "text" : "password"}
             {...props}
           />
-          <span className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center justify-center">
+          <span className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center justify-center">
             <Button
+              className="size-6"
               onClick={() => setShowPassword(!showPassword)}
+              size="icon"
               type="button"
               variant="ghost"
-              size="icon"
-              className="size-6"
             >
               {showPassword ? (
                 <EyeOff className="h-4 w-4" />
@@ -46,16 +45,16 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     }
     return (
       <input
-        type={type}
         className={cn(
-          "ease box-border flex h-10 w-full rounded-md border-2 border-input/40 bg-background px-3 py-2 text-sm outline-none transition-all duration-300 file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:items-center placeholder:text-muted-foreground focus:border-2 focus:border-input disabled:cursor-not-allowed disabled:opacity-50",
-          className,
+          "ease box-border flex h-10 w-full rounded-md border-2 border-input/40 bg-background px-3 py-2 text-sm outline-none transition-all duration-300 file:border-0 file:bg-transparent file:font-medium file:text-sm placeholder:items-center placeholder:text-muted-foreground focus:border-2 focus:border-input disabled:cursor-not-allowed disabled:opacity-50",
+          className
         )}
         ref={ref}
+        type={type}
         {...props}
       />
     );
-  },
+  }
 );
 Input.displayName = "Input";
 

@@ -1,16 +1,17 @@
-import { github, lucia } from "@/lib/auth";
-import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
 import { generateId } from "lucia";
+import { cookies } from "next/headers";
+import { type NextRequest, NextResponse } from "next/server";
+import { github, lucia } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest): Promise<Response> {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
-  const storedState = cookies().get("github_oauth_state")?.value ?? null;
-  if (!code || !state || !storedState || state !== storedState) {
+  const storedState =
+    (await cookies()).get("github_oauth_state")?.value ?? null;
+  if (!(code && state && storedState) || state !== storedState) {
     return new Response(null, {
       status: 400,
     });
@@ -30,7 +31,7 @@ export async function GET(request: NextRequest): Promise<Response> {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },
-      },
+      }
     ).then((res) => res.json());
     if (githubUserEmail === null) {
       githubUserEmail =
@@ -44,10 +45,10 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (existingUser) {
       const session = await lucia.createSession(existingUser.id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(
+      (await cookies()).set(
         sessionCookie.name,
         sessionCookie.value,
-        sessionCookie.attributes,
+        sessionCookie.attributes
       );
       return new Response(null, {
         status: 302,
@@ -70,10 +71,10 @@ export async function GET(request: NextRequest): Promise<Response> {
 
     const session = await lucia.createSession(userId, {});
     const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
+    (await cookies()).set(
       sessionCookie.name,
       sessionCookie.value,
-      sessionCookie.attributes,
+      sessionCookie.attributes
     );
     return new Response(null, {
       status: 302,
@@ -87,11 +88,11 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (e instanceof OAuth2RequestError) {
       // invalid code
       return NextResponse.redirect(
-        `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`,
+        `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`
       );
     }
     return NextResponse.redirect(
-      `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`,
+      `${process.env.NEXT_PUBLIC_APP_URL}/auth/login?error=${e.message}`
     );
   }
 }

@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "postinstall": "prisma generate",
+    "db:push": "prisma db push",
     "format": "prettier --write .",
-    "lint": "next lint"
+    "lint": "biome check .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@formkit/tempo": "^0.0.17",
@@ -17,8 +19,8 @@
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@node-rs/argon2": "^1.8.0",
     "@node-rs/bcrypt": "^1.10.1",
-    "@prisma/adapter-libsql": "^5.11.0",
-    "@prisma/client": "5.11.0",
+    "@prisma/adapter-libsql": "^7.2.0",
+    "@prisma/client": "6.19.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-collapsible": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -37,12 +39,12 @@
     "date-fns": "^3.6.0",
     "lucia": "^3.1.1",
     "lucide-react": "^0.358.0",
-    "next": "14.1.3",
+    "next": "16.1.1",
     "next-themes": "^0.3.0",
     "oslo": "^1.1.3",
-    "react": "^18",
+    "react": "19.2.3",
     "react-day-picker": "^8.10.0",
-    "react-dom": "^18",
+    "react-dom": "19.2.3",
     "react-hook-form": "^7.51.1",
     "react-wrap-balancer": "^1.1.0",
     "recharts": "^2.12.5",
@@ -55,17 +57,22 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.10",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "19.2.7",
+    "@types/react-dom": "19.2.3",
     "autoprefixer": "^10.0.1",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.3",
+    "husky": "^9.1.7",
     "postcss": "^8",
-    "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.12",
-    "prisma": "^5.11.0",
+    "prisma": "^6.19.1",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "ultracite": "6.5.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@types/react": "19.2.7",
+      "@types/react-dom": "19.2.3"
+    }
   }
 }

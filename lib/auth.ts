@@ -1,17 +1,17 @@
-import { Lucia } from "lucia";
 import { PrismaAdapter } from "@lucia-auth/adapter-prisma";
-import { db } from "./prisma";
 import { GitHub } from "arctic";
-import { cookies } from "next/headers";
-import { cache } from "react";
 import type { Session, User } from "lucia";
+import { Lucia } from "lucia";
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cache } from "react";
+import { db } from "./prisma";
 
 const adapter = new PrismaAdapter(db.session, db.user);
 
 export const github = new GitHub(
   process.env.GITHUB_CLIENT_ID!,
-  process.env.GITHUB_CLIENT_SECRET!,
+  process.env.GITHUB_CLIENT_SECRET!
 );
 
 export const lucia = new Lucia(adapter, {
@@ -39,7 +39,8 @@ export const validateRequest = cache(
   async (): Promise<
     { user: User; session: Session } | { user: null; session: null }
   > => {
-    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+    const sessionId =
+      (await cookies()).get(lucia.sessionCookieName)?.value ?? null;
     if (!sessionId) {
       return {
         user: null,
@@ -52,23 +53,23 @@ export const validateRequest = cache(
     try {
       if (result.session && result.session.fresh) {
         const sessionCookie = lucia.createSessionCookie(result.session.id);
-        cookies().set(
+        (await cookies()).set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes,
+          sessionCookie.attributes
         );
       }
       if (!result.session) {
         const sessionCookie = lucia.createBlankSessionCookie();
-        cookies().set(
+        (await cookies()).set(
           sessionCookie.name,
           sessionCookie.value,
-          sessionCookie.attributes,
+          sessionCookie.attributes
         );
       }
     } catch {}
     return result;
-  },
+  }
 );
 export async function logout() {
   "use server";
@@ -82,10 +83,10 @@ export async function logout() {
   await lucia.invalidateSession(session.id);
 
   const sessionCookie = lucia.createBlankSessionCookie();
-  cookies().set(
+  (await cookies()).set(
     sessionCookie.name,
     sessionCookie.value,
-    sessionCookie.attributes,
+    sessionCookie.attributes
   );
   return redirect("/auth/login");
 }

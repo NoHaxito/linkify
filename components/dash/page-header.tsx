@@ -1,7 +1,6 @@
 import Balance from "react-wrap-balancer";
-
-import { cn } from "@/lib/utils";
 import { pickChildren } from "@/lib/children";
+import { cn } from "@/lib/utils";
 
 function PageHeader({
   className,
@@ -10,7 +9,7 @@ function PageHeader({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [childrenWithoutActions, actions] = pickChildren(
     children,
-    PageHeaderActions,
+    PageHeaderActions
   );
   return (
     <div
@@ -29,7 +28,7 @@ function PageHeaderTitle({
 }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h1
-      className={cn("text-lg font-bold tracking-tight md:text-2xl", className)}
+      className={cn("font-bold text-lg tracking-tight md:text-2xl", className)}
       {...props}
     />
   );
@@ -41,7 +40,7 @@ function PageHeaderDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   return (
     <Balance
-      className={cn("text-xs text-muted-foreground sm:text-sm", className)}
+      className={cn("text-muted-foreground text-xs sm:text-sm", className)}
       {...props}
     />
   );
@@ -55,7 +54,7 @@ function PageHeaderActions({
     <div
       className={cn(
         "flex items-center justify-center space-x-4 border",
-        className,
+        className
       )}
       {...props}
     />

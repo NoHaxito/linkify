@@ -1,15 +1,11 @@
 "use client";
 import * as React from "react";
-
-import { cn, generateRandomString } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/use-media-query";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -23,6 +19,8 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { generateRandomString } from "@/lib/utils";
 
 import { LinkForm } from "../forms/link-form";
 
@@ -31,7 +29,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>{children}</DialogTrigger>
         <DialogContent className="max-h-[96%] overflow-auto sm:max-w-lg">
           <DialogHeader>
@@ -42,9 +40,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
           </DialogHeader>
           <div className="max-h-full overflow-auto">
             <LinkForm
-              session={true} // this means the user is logged in (refactor later)
-              randomSlug={generateRandomString(6)}
-              callback={() => setOpen(false)}
+              callback={() => setOpen(false)} // this means the user is logged in (refactor later)
               closeDialogButton={
                 <DialogClose asChild>
                   <Button size="sm" variant="outline">
@@ -52,6 +48,8 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
                   </Button>
                 </DialogClose>
               }
+              randomSlug={generateRandomString(6)}
+              session={true}
             />
           </div>
         </DialogContent>
@@ -60,7 +58,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer onOpenChange={setOpen} open={open}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent className="max-h-[96%]">
         <DrawerHeader className="text-left">
@@ -71,9 +69,7 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
         </DrawerHeader>
         <div className="overflow-auto px-4">
           <LinkForm
-            session={true} // this means the user is logged in (refactor later)
-            randomSlug={generateRandomString(6)}
-            callback={() => setOpen(false)}
+            callback={() => setOpen(false)} // this means the user is logged in (refactor later)
             closeDialogButton={
               <DrawerClose asChild>
                 <Button size="sm" variant="outline">
@@ -81,6 +77,8 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
                 </Button>
               </DrawerClose>
             }
+            randomSlug={generateRandomString(6)}
+            session={true}
           />
         </div>
       </DrawerContent>

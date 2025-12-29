@@ -1,11 +1,15 @@
-import { db } from "@/lib/prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextResponse } from "next/server";
+import { db } from "@/lib/prisma";
 
 export async function DELETE(
   request: Request,
-  { params: { id } }: { params: { id: string } },
+  props: { params: Promise<{ id: string }> }
 ) {
+  const params = await props.params;
+
+  const { id } = params;
+
   try {
     await db.link.delete({
       where: {
@@ -18,7 +22,7 @@ export async function DELETE(
       },
       {
         status: 200,
-      },
+      }
     );
   } catch (error) {
     console.log(error);

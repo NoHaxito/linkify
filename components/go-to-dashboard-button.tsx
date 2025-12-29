@@ -1,19 +1,19 @@
 "use client";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
 import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "./ui/button";
 
 export function GoToDashboardButton() {
   const pathname = usePathname();
   if (pathname.startsWith("/dashboard")) return null;
   return (
     <Link
-      href="/dashboard"
       className={cn(
         "!rounded-xl",
-        buttonVariants({ size: "sm", variant: "secondary" }),
+        buttonVariants({ size: "sm", variant: "secondary" })
       )}
+      href="/dashboard"
     >
       Dashboard
     </Link>

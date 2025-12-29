@@ -1,8 +1,7 @@
 "use client";
-import * as React from "react";
-
-import { cn } from "@/lib/utils";
-import { useMediaQuery } from "@/hooks/use-media-query";
+import { BarChart3, CalendarClock, Cloud, Globe, Key } from "lucide-react";
+import Link from "next/link";
+import type * as React from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +11,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Drawer,
@@ -22,18 +20,9 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
-import {
-  BarChart3,
-  CalendarClock,
-  Cloud,
-  Gem,
-  Globe,
-  Info,
-  Key,
-} from "lucide-react";
-import Link from "next/link";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { cn } from "@/lib/utils";
 import { useFeaturesDialog } from "@/store/features-dialog";
 
 export function FeaturesDialog() {
@@ -43,7 +32,7 @@ export function FeaturesDialog() {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog onOpenChange={setOpen} open={open}>
         {/* <DialogTrigger asChild>
           <Button variant="link" className="w-full">
             <Gem className="size-4" />
@@ -72,9 +61,9 @@ export function FeaturesDialog() {
               text="Custom Domain"
             />
             <FeaturesCard
+              disabled
               icon={<BarChart3 className="size-5" />}
               text="Analytics"
-              disabled
             />
             <FeaturesCard
               className="col-span-2"
@@ -89,8 +78,8 @@ export function FeaturesDialog() {
                 <Button variant="link">Continue without account</Button>
               </DialogClose>
               <Link
-                href="/auth/login"
                 className={cn(buttonVariants({ variant: "default" }))}
+                href="/auth/login"
               >
                 Create Account
               </Link>
@@ -102,7 +91,7 @@ export function FeaturesDialog() {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer onOpenChange={setOpen} open={open}>
       {/* <DrawerTrigger asChild>
         <Button variant="link" className="w-full">
           <Gem className="size-4" />
@@ -127,9 +116,9 @@ export function FeaturesDialog() {
             text="Custom Domain"
           />
           <FeaturesCard
+            disabled
             icon={<BarChart3 className="size-5" />}
             text="Analytics"
-            disabled
           />
           <FeaturesCard
             className="col-span-2"
@@ -139,8 +128,8 @@ export function FeaturesDialog() {
         </div>
         <DrawerFooter className="pt-2">
           <Link
-            href="/auth/login"
             className={cn(buttonVariants({ variant: "default" }))}
+            href="/auth/login"
           >
             Create Account
           </Link>
@@ -169,7 +158,7 @@ function FeaturesCard({
       aria-disabled={disabled}
       className={cn(
         className,
-        "flex flex-col items-center justify-center gap-y-2 rounded-lg bg-secondary/80 p-4 text-xs transition-colors hover:bg-secondary aria-disabled:pointer-events-none aria-disabled:opacity-50 sm:text-sm",
+        "flex flex-col items-center justify-center gap-y-2 rounded-lg bg-secondary/80 p-4 text-xs transition-colors hover:bg-secondary aria-disabled:pointer-events-none aria-disabled:opacity-50 sm:text-sm"
       )}
     >
       {icon}

@@ -1,19 +1,19 @@
 "use client";
 
-import * as React from "react";
 import * as TabsPrimitive from "@radix-ui/react-tabs";
-import type { VariantProps } from "tailwind-variants";
 import { useControllableState } from "@radix-ui/react-use-controllable-state";
-import { cn } from "@/lib/utils";
+import * as React from "react";
+import type { VariantProps } from "tailwind-variants";
 import { tv } from "tailwind-variants"; // Migrate from cva to tv pending.
+import { cn } from "@/lib/utils";
 
 const tabsVariants = tv({
   slots: {
     list: "group inline-flex h-10 items-center justify-center rounded-md p-1 text-muted-foreground",
     trigger:
-      "gap-2 inline-flex items-center justify-center whitespace-nowrap rounded-lg px-3 py-1.5 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-neutral-900 dark:focus-visible:ring-white  dark:data-[state=active]:text-white",
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 font-medium text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white dark:focus-visible:ring-white",
     indicator:
-      "absolute flex rounded-lg items-center left-0 w-[var(--radix-tab-active-width)] translate-x-[var(--radix-tab-active-left)] transition-[width,transform] duration-300",
+      "absolute left-0 flex w-[var(--radix-tab-active-width)] translate-x-[var(--radix-tab-active-left)] items-center rounded-lg transition-[width,transform] duration-300",
   },
   variants: {
     variant: {
@@ -65,7 +65,7 @@ function useTabsContext(): { context: TabsContextProps } {
 
   if (!context) {
     throw new Error(
-      "Tabs components must be used within a Tabs or Tabs.Root component",
+      "Tabs components must be used within a Tabs or Tabs.Root component"
     );
   }
 
@@ -87,7 +87,7 @@ const Tabs = React.forwardRef<
       disableAnimation,
       ...props
     },
-    ref,
+    ref
   ) => {
     const [value, setValue] = useControllableState({
       defaultProp: props.defaultValue,
@@ -109,7 +109,7 @@ const Tabs = React.forwardRef<
         </TabsContext.Provider>
       </TabsPrimitive.Root>
     );
-  },
+  }
 );
 Tabs.displayName = TabsPrimitive.Root.displayName;
 
@@ -169,21 +169,21 @@ const TabsList = React.forwardRef<
           indicator({
             variant: context.variant,
             disableAnimation: context.disableAnimation,
-          }),
+          })
         )}
         style={{
-          ["--radix-tab-active-width" as string]: !activeTab.width
-            ? null
-            : `${activeTab.width}px`,
-          ["--radix-tab-active-height" as string]: !activeTab.height
-            ? null
-            : `${activeTab.height}px`,
-          ["--radix-tab-active-left" as string]: !activeTab.left
-            ? null
-            : `${activeTab.left}px`,
-          ["--radix-tab-active-top" as string]: !activeTab.top
-            ? null
-            : `${activeTab.top}px`,
+          ["--radix-tab-active-width" as string]: activeTab.width
+            ? `${activeTab.width}px`
+            : null,
+          ["--radix-tab-active-height" as string]: activeTab.height
+            ? `${activeTab.height}px`
+            : null,
+          ["--radix-tab-active-left" as string]: activeTab.left
+            ? `${activeTab.left}px`
+            : null,
+          ["--radix-tab-active-top" as string]: activeTab.top
+            ? `${activeTab.top}px`
+            : null,
         }}
       />
     </TabsPrimitive.List>
@@ -223,7 +223,7 @@ const TabsContent = React.forwardRef<
   <TabsPrimitive.Content
     className={cn(
       "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      className,
+      className
     )}
     ref={ref}
     {...props}

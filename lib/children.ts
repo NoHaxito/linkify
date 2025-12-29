@@ -3,7 +3,7 @@
  * All credits to the respective author
  */
 
-import { Children, isValidElement, ReactNode } from "react";
+import { Children, isValidElement, type ReactNode } from "react";
 
 /**
  * Gets only the valid children of a component,
@@ -13,15 +13,15 @@ import { Children, isValidElement, ReactNode } from "react";
  */
 export function getValidChildren(children: React.ReactNode) {
   return Children.toArray(children).filter((child) =>
-    isValidElement(child),
-  ) as React.ReactElement[];
+    isValidElement(child)
+  ) as React.ReactElement<any>[];
 }
 
 export const pickChildren = <T = ReactNode>(
   children: T | undefined,
-  targetChild: React.ElementType,
+  targetChild: React.ElementType
 ): [T | undefined, T[] | undefined] => {
-  let target: T[] = [];
+  const target: T[] = [];
 
   const withoutTargetChildren = Children.map(children, (item) => {
     if (!isValidElement(item)) return item;

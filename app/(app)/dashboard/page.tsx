@@ -1,3 +1,4 @@
+import { Plus } from "lucide-react";
 import { LinkCard } from "@/components/dash/link-card";
 import { LinkCreateDialog } from "@/components/dash/link-create-dialog";
 import {
@@ -7,16 +8,8 @@ import {
   PageHeaderTitle,
 } from "@/components/dash/page-header";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { validateRequest } from "@/lib/auth";
 import { db } from "@/lib/prisma";
-import { BarChart3, Copy, Pencil, Plus, Trash } from "lucide-react";
 
 export default async function Home() {
   const { session } = await validateRequest();
@@ -52,10 +45,10 @@ export default async function Home() {
       {links.length === 0 ? (
         <div className="mt-4 flex h-[65vh] flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
           <div className="flex flex-col items-center gap-1 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
+            <h3 className="font-bold text-2xl tracking-tight">
               You have no links created
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Create a new link to get started.
             </p>
             <LinkCreateDialog>

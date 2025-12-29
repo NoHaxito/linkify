@@ -1,51 +1,51 @@
-import { cn } from "@/lib/utils";
-import GithubIcon from "./icons/github";
-import { buttonVariants } from "./ui/button";
-import { ThemeToggle } from "./theme-toggle";
-import Link from "next/link";
 import { LucideLink } from "lucide-react";
+import Link from "next/link";
 import { validateRequest } from "@/lib/auth";
+import { cn } from "@/lib/utils";
 import { GoToDashboardButton } from "./go-to-dashboard-button";
+import GithubIcon from "./icons/github";
+import { ThemeToggle } from "./theme-toggle";
+import { buttonVariants } from "./ui/button";
 
 export async function Navbar() {
-  const { session, user } = await validateRequest();
+  const { session } = await validateRequest();
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 max-w-screen-2xl items-center">
+      <div className="container mx-auto flex h-14 items-center">
         <div className="mr-4">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
+          <Link className="mr-6 flex items-center space-x-2" href="/">
             <LucideLink className="size-5" />
             <span className="font-bold">Linkify</span>
           </Link>
         </div>
         <div className="flex flex-1 items-center justify-end space-x-2">
-          {!session ? (
+          {session ? (
+            <GoToDashboardButton />
+          ) : (
             <Link
-              href="/auth/login"
               className={cn(
                 buttonVariants({
                   variant: "linkHover2",
                   size: "sm",
-                }),
+                })
               )}
+              href="/auth/login"
             >
               Sign In
             </Link>
-          ) : (
-            <GoToDashboardButton />
           )}
           <nav className="flex items-center">
             <Link
               href="https://github.com/nohaxito/url-shortener"
-              target="_blank"
               rel="noreferrer"
+              target="_blank"
             >
               <div
                 className={cn(
                   buttonVariants({
                     variant: "ghost",
                     size: "icon",
-                  }),
+                  })
                 )}
               >
                 <GithubIcon className="h-4 w-4" />

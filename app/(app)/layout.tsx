@@ -1,11 +1,12 @@
-import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
 import "@/styles/globals.css";
-import { cn } from "@/lib/utils";
-import { Navbar } from "@/components/navbar";
 import { FeaturesDialog } from "@/components/features-dialog";
+import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+
 // import { AuthProvider } from "@/components/auth-provider";
 // import { validateRequest } from "@/lib/auth";
 
@@ -23,21 +24,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const auth = await validateRequest();
-  // console.log(auth);
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
-          fontSans.variable,
+          fontSans.variable
         )}
       >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
-          enableSystem
           disableTransitionOnChange
+          enableSystem
         >
           {/* <AuthProvider {...auth}> */}
           <div className="relative flex min-h-screen flex-col bg-background">
