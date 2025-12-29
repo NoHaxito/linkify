@@ -4,9 +4,9 @@ import { db } from "@/lib/prisma";
 
 export async function POST(
   request: Request,
-  params: Promise<{ slug: string }>
+  ctx: { params: Promise<{ id: string }> }
 ) {
-  const { slug } = await params;
+  const { id: slug } = await ctx.params;
   const { password } = (await request.json()) as { password: string };
 
   const link = await db.link.findUnique({
