@@ -1,5 +1,5 @@
 import { PrismaLibSql } from "@prisma/adapter-libsql";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../prisma/generated/client";
 
 const adapter = new PrismaLibSql({
   url: process.env.TURSO_DB_URL ?? "",
