@@ -4,6 +4,8 @@ import { getIp } from "@/lib/get-request-ip";
 
 export async function GET(req: Request) {
   const request_ip = getIp(req);
+
+  console.log(request_ip);
   const { country, countryCode }: Country = await fetch(
     `http://ip-api.com/json/${request_ip}`
   ).then((res) => res.json());
