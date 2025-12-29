@@ -12,15 +12,15 @@ const tabsVariants = tv({
   slots: {
     list: "group inline-flex h-10 items-center justify-center rounded-md p-1 text-muted-foreground",
     trigger:
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 font-medium text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-300 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white dark:focus-visible:ring-white",
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3 py-1.5 font-medium text-sm transition-colors duration-300 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-neutral-300 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:text-neutral-900 dark:data-[state=active]:text-white dark:focus-visible:ring-white",
     indicator:
-      "absolute left-0 flex w-[var(--radix-tab-active-width)] translate-x-[var(--radix-tab-active-left)] items-center rounded-lg transition-[width,transform] duration-300",
+      "absolute left-0 flex w-(--radix-tab-active-width) translate-x-(--radix-tab-active-left) items-center rounded-lg transition-[all] duration-300",
   },
   variants: {
     variant: {
       solid: {
         list: "rounded-lg bg-secondary dark:bg-secondary/50",
-        indicator: "-z-[2] h-[var(--radix-tab-active-height)] bg-muted",
+        indicator: "-z-2 h-(--radix-tab-active-height) bg-muted",
         trigger:
           "data-[state=active]:bg-neutral-200 dark:data-[state=active]:bg-neutral-800",
       },
@@ -223,7 +223,7 @@ const TabsContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <TabsPrimitive.Content
     className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+      "mt-2 ring-offset-background focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       className
     )}
     ref={ref}

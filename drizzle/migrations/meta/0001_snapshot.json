@@ -21,12 +21,8 @@
           "name": "link_analytics_link_id_link_id_fk",
           "tableFrom": "link_analytics",
           "tableTo": "link",
-          "columnsFrom": [
-            "link_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["link_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -90,12 +86,8 @@
           "name": "link_analytics_visit_link_id_link_id_fk",
           "tableFrom": "link_analytics_visit",
           "tableTo": "link",
-          "columnsFrom": [
-            "link_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["link_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -103,12 +95,8 @@
           "name": "link_analytics_visit_analytics_id_link_analytics_link_id_fk",
           "tableFrom": "link_analytics_visit",
           "tableTo": "link_analytics",
-          "columnsFrom": [
-            "analytics_id"
-          ],
-          "columnsTo": [
-            "link_id"
-          ],
+          "columnsFrom": ["analytics_id"],
+          "columnsTo": ["link_id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -154,12 +142,8 @@
           "name": "link_settings_link_id_link_id_fk",
           "tableFrom": "link_settings",
           "tableTo": "link",
-          "columnsFrom": [
-            "link_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["link_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -218,12 +202,8 @@
           "name": "link_user_id_user_id_fk",
           "tableFrom": "link",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -233,9 +213,7 @@
         "link_slug_unique": {
           "name": "link_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

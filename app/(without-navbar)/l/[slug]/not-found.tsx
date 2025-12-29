@@ -37,7 +37,7 @@ export default function LinkNotFound() {
             className={buttonVariants({
               variant: "link",
               size: "sm",
-              className: "!text-muted-foreground hover:!text-primary w-full",
+              className: "w-full text-muted-foreground! hover:text-primary!",
             })}
             href="/dashboard"
           >

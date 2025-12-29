@@ -1,8 +1,8 @@
 import { Loader2 } from "lucide-react";
-import { redirect as nextRedirect } from "next/navigation";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { db, linkAnalytics, linkAnalyticsVisits } from "@/lib/db";
 import type { LinkProps } from "@/lib/types";
+import { Redirector } from "./redirector";
 
 export interface Country {
   country: string;
@@ -42,7 +42,7 @@ async function saveAnalytics(link: LinkProps, saveAnalytics?: boolean) {
 }
 export async function RedirectingView({ link }: { link: LinkProps }) {
   await saveAnalytics(link, true);
-  nextRedirect(link.url);
+
   return (
     <Card className="w-[95%] max-w-sm">
       <CardHeader>
@@ -51,6 +51,7 @@ export async function RedirectingView({ link }: { link: LinkProps }) {
           Redirecting to link
         </CardTitle>
       </CardHeader>
+      <Redirector link={link} />
     </Card>
   );
 }

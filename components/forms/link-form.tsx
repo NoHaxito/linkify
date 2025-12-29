@@ -2,7 +2,7 @@
 
 import { addDay, format } from "@formkit/tempo";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { Session } from "lucia";
+
 import { CalendarIcon, Gem, Info, Loader2, PartyPopper } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -40,6 +40,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import type { Session } from "@/lib/auth";
 import { cn, slugify } from "@/lib/utils";
 import { useFeaturesDialog } from "@/store/features-dialog";
 // import { useAuth } from "@/store/auth";
@@ -61,7 +62,7 @@ export function LinkForm({
   callback,
 }: {
   randomSlug: string;
-  session: Session | null | true;
+  session: Session | undefined;
   loggedIn?: boolean;
   closeDialogButton?: React.ReactNode;
   callback?: () => void;
@@ -119,7 +120,9 @@ export function LinkForm({
       description: res.link,
       icon: <PartyPopper className="h-4 w-4" />,
     });
-    if (callback) callback?.();
+    if (callback) {
+      callback?.();
+    }
     router.refresh();
   }
   const setFeaturesDialog = useFeaturesDialog((state) => state.setOpen);
@@ -138,7 +141,7 @@ export function LinkForm({
   return (
     <Form {...form}>
       <form
-        className="grid w-full gap-y-3 pb-2"
+        className="grid w-full gap-y-3 overflow-hidden pb-2"
         onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
@@ -204,9 +207,9 @@ export function LinkForm({
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
                     <Label htmlFor="custom-expires-date">Expire Date</Label>
-                    <FormDescription className="text-xs">
+                    <p className="text-muted-foreground text-xs">
                       Set an expiration date for your link.
-                    </FormDescription>
+                    </p>
                   </div>
                   <Switch
                     checked={advancedOptions.showExpireDate}
@@ -300,10 +303,10 @@ export function LinkForm({
                     <Label htmlFor="password-protected">
                       Password Protected
                     </Label>
-                    <FormDescription className="text-xs">
+                    <p className="text-muted-foreground text-xs">
                       Establish a password to protect your link from other
                       users.
-                    </FormDescription>
+                    </p>
                   </div>
                   <Switch
                     checked={advancedOptions.passwordProtected}

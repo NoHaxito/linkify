@@ -10,7 +10,7 @@ export function GoToDashboardButton() {
   return (
     <Link
       className={cn(
-        "!rounded-xl",
+        "rounded-xl!",
         buttonVariants({ size: "sm", variant: "secondary" })
       )}
       href="/dashboard"

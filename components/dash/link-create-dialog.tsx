@@ -31,14 +31,14 @@ export function LinkCreateDialog({ children }: { children: React.ReactNode }) {
     return (
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogTrigger asChild>{children}</DialogTrigger>
-        <DialogContent className="max-h-[96%] overflow-auto sm:max-w-lg">
+        <DialogContent className="max-h-[96%] overflow-hidden sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Create link</DialogTitle>
             <DialogDescription>
               Create a new link to share with others.
             </DialogDescription>
           </DialogHeader>
-          <div className="max-h-full overflow-auto">
+          <div className="max-h-full overflow-hidden">
             <LinkForm
               callback={() => setOpen(false)} // this means the user is logged in (refactor later)
               closeDialogButton={

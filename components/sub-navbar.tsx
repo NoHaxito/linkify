@@ -24,7 +24,7 @@ const links = [
 export function SubNavbar({ user }: { user: User }) {
   const pathname = usePathname();
   return (
-    <nav className="sticky top-[3.5rem] flex items-center gap-3 overflow-auto border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <nav className="sticky top-14 flex items-center gap-3 overflow-auto border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto flex items-center gap-3">
         {links.map((link) => {
           const Icon = link.icon;

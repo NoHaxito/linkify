@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <div className="container relative">
-      <div className="flex h-[100vh] w-full flex-1 flex-col items-center justify-center">
+      <div className="flex h-screen w-full flex-1 flex-col items-center justify-center">
         <div className="flex h-full w-full max-w-xs flex-col items-center justify-center gap-y-3">
           <div>
             <h1 className="text-center font-bold text-3xl">Linkify</h1>
