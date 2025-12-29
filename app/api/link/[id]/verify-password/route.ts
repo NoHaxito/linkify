@@ -4,14 +4,14 @@ import { db } from "@/lib/prisma";
 
 export async function POST(
   request: Request,
-  props: { params: Promise<{ slug: string }> }
+  params: Promise<{ slug: string }>
 ) {
-  const params = await props.params;
+  const { slug } = await params;
   const { password } = (await request.json()) as { password: string };
 
   const link = await db.link.findUnique({
     where: {
-      slug: params.slug,
+      slug,
     },
     include: {
       settings: true,
@@ -40,7 +40,7 @@ export async function POST(
   }
 
   const cookieStore = await cookies();
-  cookieStore.set(`link_verified_${params.slug}`, "true", {
+  cookieStore.set(`link_verified_${slug}`, "true", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
