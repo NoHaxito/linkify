@@ -11,7 +11,7 @@ export async function Navbar() {
   const { session } = await validateRequest();
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex h-14 items-center">
+      <div className="container mx-auto flex h-14 items-center px-4">
         <div className="mr-4">
           <Link className="mr-6 flex items-center space-x-2" href="/">
             <LucideLink className="size-5" />

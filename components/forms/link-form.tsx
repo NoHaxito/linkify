@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import {
   Accordion,
   AccordionContent,
@@ -40,20 +39,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { createLink } from "@/lib/api";
 import type { Session } from "@/lib/auth";
 import { cn, slugify } from "@/lib/utils";
+import type { LinkFormData } from "@/lib/validations";
+import { linkSchema } from "@/lib/validations";
 import { useFeaturesDialog } from "@/store/features-dialog";
-// import { useAuth } from "@/store/auth";
-
-export const createLinkSchema = z.object({
-  url: z.string().url().min(1),
-  slug: z.string().min(1),
-  expires_at: z.date().optional(),
-  password: z.string().optional(),
-  allowUnauthenticated: z.boolean().optional(),
-});
-
-export type CreateLinkSchema = z.infer<typeof createLinkSchema>;
 
 export function LinkForm({
   randomSlug,
@@ -67,21 +58,14 @@ export function LinkForm({
   closeDialogButton?: React.ReactNode;
   callback?: () => void;
 }) {
-  const [link, setLink] = useState<{
-    success: boolean;
-    link: string | null;
-  }>({
-    success: false,
-    link: null,
-  });
   const router = useRouter();
   const [advancedOptions, setAdvancedOptions] = useState({
     showExpireDate: true,
     passwordProtected: false,
   });
   const defaultExpireDate = addDay(new Date(), session ? 30 : 7);
-  const form = useForm<z.infer<typeof createLinkSchema>>({
-    resolver: zodResolver(createLinkSchema),
+  const form = useForm<LinkFormData>({
+    resolver: zodResolver(linkSchema),
     defaultValues: {
       url: "",
       slug: randomSlug,
@@ -91,8 +75,7 @@ export function LinkForm({
     },
     mode: "all",
   });
-  async function onSubmit(values: z.infer<typeof createLinkSchema>) {
-    setLink({ success: false, link: null });
+  async function onSubmit(values: LinkFormData) {
     if (
       advancedOptions.passwordProtected &&
       (!values.password || values.password.length === 0)
@@ -103,27 +86,34 @@ export function LinkForm({
       });
       return;
     }
-    const res = await fetch("/api/link/create", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }).then((res) => res.json());
-    if (res.error) {
-      toast.error("Failed to create link", {
-        description: res.message,
+
+    try {
+      const data = await createLink({
+        ...values,
+        password: values.password || undefined,
+        expires_at: values.expires_at?.toISOString(),
       });
-      return;
+
+      toast.success("Your link has been created", {
+        description: data.link,
+        icon: <PartyPopper className="h-4 w-4" />,
+      });
+
+      if (callback) {
+        callback();
+      }
+      router.refresh();
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Failed to create link", {
+          description: error.message,
+        });
+      } else {
+        toast.error("Failed to create link", {
+          description: "Something went wrong, please try again.",
+        });
+      }
     }
-    toast("Your link has been created", {
-      description: res.link,
-      icon: <PartyPopper className="h-4 w-4" />,
-    });
-    if (callback) {
-      callback?.();
-    }
-    router.refresh();
   }
   const setFeaturesDialog = useFeaturesDialog((state) => state.setOpen);
   useEffect(() => {
@@ -136,8 +126,7 @@ export function LinkForm({
     if (!passwordProtected) {
       form.setValue("password", undefined);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [advancedOptions]);
+  }, [advancedOptions, defaultExpireDate, form]);
   return (
     <Form {...form}>
       <form
@@ -180,7 +169,7 @@ export function LinkForm({
                           <Info className="h-4 w-4" />
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent className="mr-2 md:mr-0">
+                      <TooltipContent className="z-50 mr-2 md:mr-0">
                         This could not be modified.
                       </TooltipContent>
                     </Tooltip>
@@ -270,16 +259,18 @@ export function LinkForm({
                               className="mt-2"
                               onChange={(selectedTime) => {
                                 const currentTime = field.value;
-                                currentTime?.setHours(
-                                  Number.parseInt(
-                                    selectedTime.target.value.split(":")[0]
-                                  ),
-                                  Number.parseInt(
-                                    selectedTime.target.value.split(":")[1]
-                                  ),
-                                  0
-                                );
-                                field.onChange(currentTime);
+                                if (currentTime) {
+                                  const [hours, minutes] =
+                                    selectedTime.target.value
+                                      .split(":")
+                                      .map((val) => Number.parseInt(val, 10));
+                                  currentTime.setHours(
+                                    hours ?? 0,
+                                    minutes ?? 0,
+                                    0
+                                  );
+                                  field.onChange(currentTime);
+                                }
                               }}
                               // take locale date time string in format that the input expects (24hr time)
                               type="time"

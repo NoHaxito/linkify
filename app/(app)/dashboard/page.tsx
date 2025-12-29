@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import { LinkCard } from "@/components/dash/link-card";
 import { LinkCreateDialog } from "@/components/dash/link-create-dialog";
@@ -20,6 +20,12 @@ import {
 
 export default async function Home() {
   const { session } = await validateRequest();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return null;
+  }
+
   const userLinksData = await db
     .select({
       link: links,
@@ -29,7 +35,8 @@ export default async function Home() {
     .from(links)
     .leftJoin(linkSettings, eq(links.id, linkSettings.linkId))
     .leftJoin(linkAnalytics, eq(links.id, linkAnalytics.linkId))
-    .where(eq(links.userId, session?.user?.id ?? ""));
+    .where(eq(links.userId, userId))
+    .orderBy(desc(links.createdAt));
 
   const userLinks = await Promise.all(
     userLinksData.map(async (linkRow) => {
@@ -54,12 +61,13 @@ export default async function Home() {
       };
     })
   );
+
   return (
     <>
       <PageHeader>
-        <PageHeaderTitle>Links</PageHeaderTitle>
+        <PageHeaderTitle>Your Links</PageHeaderTitle>
         <PageHeaderDescription>
-          Manage all your links form here.
+          Create, manage, and track your short links
         </PageHeaderDescription>
         <PageHeaderActions>
           <LinkCreateDialog>
@@ -88,7 +96,7 @@ export default async function Home() {
           </div>
         </div>
       ) : (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {userLinks.map((link) => (
             <LinkCard
               key={link.id}

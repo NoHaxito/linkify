@@ -52,10 +52,7 @@ function PageHeaderActions({
 }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn(
-        "flex items-center justify-center space-x-4 border",
-        className
-      )}
+      className={cn("flex items-center justify-center gap-2", className)}
       {...props}
     />
   );

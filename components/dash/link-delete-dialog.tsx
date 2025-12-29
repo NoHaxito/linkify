@@ -39,24 +39,24 @@ export function LinkDeleteDialog({
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  async function deleteLink() {
+  async function handleDelete() {
     setLoading(true);
-    const res = await fetch(`/api/link/${id}/delete`, {
-      method: "DELETE",
-    }).then((res) => res.json());
-    if (res.error) {
-      toast.error("Failed to delete link", {
-        description: res.message,
-      });
+    try {
+      await deleteLink(id);
+      toast.success("Link deleted successfully");
+      router.refresh();
+      setOpen(false);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error("Failed to delete link", {
+          description: error.message,
+        });
+      } else {
+        toast.error("Failed to delete link");
+      }
+    } finally {
       setLoading(false);
-      return;
     }
-    toast.success("Your link has been deleted", {
-      description: res.link,
-    });
-    router.refresh();
-    setOpen(false);
-    setLoading(false);
   }
   if (isDesktop) {
     return (
@@ -80,7 +80,7 @@ export function LinkDeleteDialog({
               </DialogClose>
               <Button
                 disabled={loading}
-                onClick={deleteLink}
+                onClick={handleDelete}
                 size="sm"
                 variant="destructive"
               >
@@ -119,7 +119,7 @@ export function LinkDeleteDialog({
         <DrawerFooter>
           <Button
             disabled={loading}
-            onClick={deleteLink}
+            onClick={handleDelete}
             size="sm"
             variant="destructive"
           >

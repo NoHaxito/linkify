@@ -1,9 +1,20 @@
-import { Loader2 } from "lucide-react";
+import { LinksSkeleton } from "@/components/dash/links-skeleton";
+import {
+  PageHeader,
+  PageHeaderDescription,
+  PageHeaderTitle,
+} from "@/components/dash/page-header";
 
 export default function Loading() {
   return (
-    <div className="flex h-[70vh] w-full items-center justify-center">
-      <Loader2 className="h-10 w-10 animate-spin" />
-    </div>
+    <>
+      <PageHeader className="container mx-auto">
+        <PageHeaderTitle>Your Links</PageHeaderTitle>
+        <PageHeaderDescription>
+          Create, manage, and track your short links
+        </PageHeaderDescription>
+      </PageHeader>
+      <LinksSkeleton />
+    </>
   );
 }

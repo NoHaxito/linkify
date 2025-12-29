@@ -10,7 +10,6 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import type { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +37,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import type { LinkProps } from "@/lib/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 export function LinkAnalyticsDialog({
@@ -63,33 +63,32 @@ export function LinkAnalyticsDialog({
     if (!open) {
       return;
     }
+    setLoading(true);
+
     const dateCounts: Record<string, number> = {};
     const countryCounts: Record<string, number> = {};
 
-    if (link?.analytics?.visits) {
+    if (link?.analytics?.visits && link.analytics.visits.length > 0) {
       for (const item of link.analytics.visits) {
-        // Extraer solo la fecha del objeto de fecha y hora
         const date = format(item.visited_at, "D/MM/YYYY");
         const country = item.country.split("(")[0].trim();
-        // Incrementar el contador para esa fecha
-        if (dateCounts[date]) {
-          dateCounts[date]++;
-        } else {
-          dateCounts[date] = 1;
-        }
-        if (countryCounts[country]) {
-          countryCounts[country]++;
-        } else {
-          countryCounts[country] = 1;
-        }
+
+        dateCounts[date] = (dateCounts[date] ?? 0) + 1;
+        countryCounts[country] = (countryCounts[country] ?? 0) + 1;
       }
     }
-    const formattedDateCounts = Object.keys(dateCounts).map((day) => {
-      return { day, count: dateCounts[day] };
-    });
-    const formattedDateCountries = Object.keys(countryCounts).map((country) => {
-      return { country, count: countryCounts[country] };
-    });
+
+    const formattedDateCounts = Object.entries(dateCounts)
+      .map(([day, count]) => ({ day, count }))
+      .sort((a, b) => {
+        const dateA = new Date(a.day.split("/").reverse().join("-"));
+        const dateB = new Date(b.day.split("/").reverse().join("-"));
+        return dateA.getTime() - dateB.getTime();
+      });
+
+    const formattedDateCountries = Object.entries(countryCounts)
+      .map(([country, count]) => ({ country, count }))
+      .sort((a, b) => b.count - a.count);
 
     setAnalytics({
       perDay: formattedDateCounts,
@@ -97,7 +96,7 @@ export function LinkAnalyticsDialog({
     });
 
     setLoading(false);
-  }, [open, link?.analytics?.visits.forEach, link?.analytics?.visits]);
+  }, [open, link?.analytics?.visits]);
 
   if (isDesktop) {
     return (

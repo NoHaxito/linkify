@@ -25,13 +25,13 @@ export function SubNavbar({ user }: { user: User }) {
   const pathname = usePathname();
   return (
     <nav className="sticky top-14 flex items-center gap-3 overflow-auto border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
-      <div className="container mx-auto flex items-center gap-3">
+      <div className="container mx-auto flex items-center gap-3 px-4">
         {links.map((link) => {
           const Icon = link.icon;
           const active = link.href === pathname;
           return (
             <Link
-              className="flex items-center gap-2 border-transparent border-b-2 px-3 py-2.5 text-muted-foreground text-sm hover:text-primary data-[active=true]:border-foreground data-[active=true]:text-primary"
+              className="flex items-center gap-2 border-transparent border-b-2 px-3 py-2.5 text-muted-foreground text-sm hover:border-accent hover:text-foreground data-[active=true]:border-foreground data-[active=true]:text-foreground"
               data-active={active}
               href={link.href}
               key={link.href + link.title}

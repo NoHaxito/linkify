@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { verifyPassword } from "@/lib/api";
 
 export function PasswordForm({ slug }: { slug: string }) {
   const [password, setPassword] = useState("");
@@ -22,33 +23,20 @@ export function PasswordForm({ slug }: { slug: string }) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!password) {
-      toast.error("Password is required");
+    if (!password.trim()) {
       return;
     }
 
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/link/${slug}/verify-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ password }),
-      });
-
-      const data = await res.json();
-
-      if (data.error) {
-        toast.error(data.message || "Incorrect password");
-        return;
-      }
-
-      if (data.success) {
-        router.refresh();
-      }
+      await verifyPassword(slug, password);
+      router.refresh();
     } catch (error) {
-      toast.error("Something went wrong, please try again");
+      if (error instanceof Error) {
+        toast.error(error.message || "Incorrect password");
+      } else {
+        toast.error("Something went wrong, please try again");
+      }
     } finally {
       setIsLoading(false);
     }
