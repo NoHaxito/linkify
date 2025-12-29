@@ -88,7 +88,6 @@ export function LinkCard({ link }: { link: LinkProps }) {
         </NextLink>
         <div className="ml-auto flex items-center gap-3">
           <LinkAnalyticsDialog
-            id={link.id}
             link={{
               ...link,
               analytics: link.analytics,

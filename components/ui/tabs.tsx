@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/performance/noNamespaceImport: ... */
 "use client";
 
 import * as TabsPrimitive from "@radix-ui/react-tabs";
@@ -90,7 +91,7 @@ const Tabs = React.forwardRef<
     ref
   ) => {
     const [value, setValue] = useControllableState({
-      defaultProp: props.defaultValue,
+      defaultProp: props.defaultValue ?? "",
       prop: props.value,
       onChange: props.onValueChange,
     });
@@ -155,7 +156,7 @@ const TabsList = React.forwardRef<
         left: activeNode?.offsetLeft,
       });
     }
-  }, [context.value]);
+  }, [context.value, id]);
   return (
     <TabsPrimitive.List
       className={cn(list({ variant: context.variant, className }))}
