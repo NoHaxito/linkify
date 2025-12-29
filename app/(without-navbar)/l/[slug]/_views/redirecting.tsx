@@ -1,14 +1,14 @@
-import type { Link, LinkAnalyticsVisit, LinkSettings } from "@prisma/client";
-
 import { Loader2 } from "lucide-react";
 import { redirect as nextRedirect } from "next/navigation";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { db } from "@/lib/prisma";
+import { db, linkAnalytics, linkAnalyticsVisits } from "@/lib/db";
+import type { LinkProps } from "@/lib/types";
 
-export interface LinkProps extends Link {
-  analytics: { link_id: string; visits: LinkAnalyticsVisit[] } | null;
-  settings: LinkSettings | null;
+export interface Country {
+  country: string;
+  countryCode: string;
 }
+
 async function saveAnalytics(link: LinkProps, saveAnalytics?: boolean) {
   if (saveAnalytics) {
     const countryInfo: Country = await fetch(
@@ -21,48 +21,21 @@ async function saveAnalytics(link: LinkProps, saveAnalytics?: boolean) {
       return;
     }
     if (link?.analytics) {
-      await db.linkAnalytics.update({
-        where: {
-          link_id: link!.id,
-        },
-        data: {
-          visits: {
-            create: {
-              country: `${countryInfo.country} (${countryInfo.countryCode})`,
-            },
-          },
-        },
-        include: {
-          link: {
-            include: {
-              settings: true,
-              analytics: {
-                include: {
-                  visits: true,
-                },
-              },
-            },
-          },
-        },
+      await db.insert(linkAnalyticsVisits).values({
+        analyticsId: link.analytics.linkId,
+        linkId: link.id,
+        country: `${countryInfo.country} (${countryInfo.countryCode})`,
       });
     } else {
-      await db.linkAnalytics.create({
-        data: {
-          link_id: link!.id,
-          visits: {
-            create: {
-              country: `${countryInfo.country} (${countryInfo.countryCode})`,
-            },
-          },
-        },
-        include: {
-          link: {
-            include: {
-              settings: true,
-              analytics: true,
-            },
-          },
-        },
+      await db.transaction(async (tx) => {
+        await tx.insert(linkAnalytics).values({
+          linkId: link.id,
+        });
+        await tx.insert(linkAnalyticsVisits).values({
+          analyticsId: link.id,
+          linkId: link.id,
+          country: `${countryInfo.country} (${countryInfo.countryCode})`,
+        });
       });
     }
   }

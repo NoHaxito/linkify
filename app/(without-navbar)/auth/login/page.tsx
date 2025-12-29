@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import GithubIcon from "@/components/icons/github";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { SignInWithGithub } from "@/components/sign-in-with-github";
 
 export const metadata: Metadata = {
   title: "Auth - Linkify",
@@ -20,13 +17,7 @@ export default async function Home() {
               Free, unlimited url shortener.
             </p>
           </div>
-          <Link
-            className={cn("w-full", buttonVariants({ variant: "default" }))}
-            href="/api/auth/github/"
-          >
-            <GithubIcon className="size-4" />
-            Sign in with GitHub
-          </Link>
+          <SignInWithGithub />
         </div>
       </div>
     </div>

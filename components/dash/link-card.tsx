@@ -11,7 +11,6 @@ import {
 import NextLink from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
-import type { LinkProps } from "@/app/(without-navbar)/l/[slug]/_views/redirecting";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -20,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { LinkProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Separator } from "../ui/separator";
 import { LinkAnalyticsDialog } from "./link-analytics-dialog";
@@ -30,7 +30,7 @@ function copyToClipboard(text: string) {
 }
 
 export function LinkCard({ link }: { link: LinkProps }) {
-  const { slug, created_at } = link;
+  const { slug, createdAt } = link;
   const [copied, setCopied] = useState(false);
   const handleCopy = () => {
     copyToClipboard(`${process.env.NEXT_PUBLIC_APP_URL}/l/${slug}`);
@@ -105,7 +105,7 @@ export function LinkCard({ link }: { link: LinkProps }) {
           </LinkAnalyticsDialog>
           <Separator className="h-4" orientation="vertical" />
           <span className="text-muted-foreground text-xs">
-            {format(created_at, "D MMMM YYYY")}
+            {format(createdAt, "D MMMM YYYY")}
           </span>
         </div>
       </CardFooter>

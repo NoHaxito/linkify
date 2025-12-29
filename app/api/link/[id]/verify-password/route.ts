@@ -1,6 +1,7 @@
+import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { db } from "@/lib/prisma";
+import { db, linkSettings, links } from "@/lib/db";
 
 export async function POST(
   request: Request,
@@ -9,30 +10,34 @@ export async function POST(
   const { id: slug } = await ctx.params;
   const { password } = (await request.json()) as { password: string };
 
-  const link = await db.link.findUnique({
-    where: {
-      slug,
-    },
-    include: {
-      settings: true,
-    },
-  });
+  const linkResult = await db
+    .select({
+      id: links.id,
+      slug: links.slug,
+      password: linkSettings.password,
+    })
+    .from(links)
+    .leftJoin(linkSettings, eq(links.id, linkSettings.linkId))
+    .where(eq(links.slug, slug))
+    .limit(1);
 
-  if (!link) {
+  if (linkResult.length === 0) {
     return NextResponse.json(
       { error: true, message: "Link not found" },
       { status: 404 }
     );
   }
 
-  if (!link.settings?.password) {
+  const link = linkResult[0];
+
+  if (!link.password) {
     return NextResponse.json(
       { error: true, message: "Link is not password protected" },
       { status: 400 }
     );
   }
 
-  if (link.settings.password !== password) {
+  if (link.password !== password) {
     return NextResponse.json(
       { error: true, message: "Incorrect password" },
       { status: 401 }

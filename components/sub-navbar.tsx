@@ -1,10 +1,10 @@
 "use client";
 
-import type { User } from "lucia";
 import { Home, Settings } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { User } from "@/lib/auth";
 
 const links = [
   {
@@ -43,10 +43,10 @@ export function SubNavbar({ user }: { user: User }) {
         })}
         <div className="sticky right-0 ml-auto">
           <Image
-            alt={`${user.username} avatar image`}
+            alt={`${user.name} avatar image`}
             className="min-h-7 min-w-7 rounded-full"
             height={28}
-            src={user.avatar_url}
+            src={user.image ?? ""}
             width={28}
           />
         </div>

@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import { LinkCard } from "@/components/dash/link-card";
 import { LinkCreateDialog } from "@/components/dash/link-create-dialog";
@@ -8,24 +9,51 @@ import {
   PageHeaderTitle,
 } from "@/components/dash/page-header";
 import { Button } from "@/components/ui/button";
-import { validateRequest } from "@/lib/auth";
-import { db } from "@/lib/prisma";
+import { validateRequest } from "@/lib/auth-helpers";
+import {
+  db,
+  linkAnalytics,
+  linkAnalyticsVisits,
+  linkSettings,
+  links,
+} from "@/lib/db";
 
 export default async function Home() {
   const { session } = await validateRequest();
-  const links = await db.link.findMany({
-    where: {
-      user_id: session?.userId,
-    },
-    include: {
-      settings: true,
-      analytics: {
-        include: {
-          visits: true,
-        },
-      },
-    },
-  });
+  const userLinksData = await db
+    .select({
+      link: links,
+      settings: linkSettings,
+      analytics: linkAnalytics,
+    })
+    .from(links)
+    .leftJoin(linkSettings, eq(links.id, linkSettings.linkId))
+    .leftJoin(linkAnalytics, eq(links.id, linkAnalytics.linkId))
+    .where(eq(links.userId, session?.user?.id ?? ""));
+
+  const userLinks = await Promise.all(
+    userLinksData.map(async (linkRow) => {
+      const visits = linkRow.analytics
+        ? await db
+            .select()
+            .from(linkAnalyticsVisits)
+            .where(
+              eq(linkAnalyticsVisits.analyticsId, linkRow.analytics.linkId)
+            )
+        : [];
+
+      return {
+        ...linkRow.link,
+        settings: linkRow.settings,
+        analytics: linkRow.analytics
+          ? {
+              ...linkRow.analytics,
+              visits,
+            }
+          : null,
+      };
+    })
+  );
   return (
     <>
       <PageHeader>
@@ -42,7 +70,7 @@ export default async function Home() {
           </LinkCreateDialog>
         </PageHeaderActions>
       </PageHeader>
-      {links.length === 0 ? (
+      {userLinks.length === 0 ? (
         <div className="mt-4 flex h-[65vh] flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm">
           <div className="flex flex-col items-center gap-1 text-center">
             <h3 className="font-bold text-2xl tracking-tight">
@@ -61,7 +89,7 @@ export default async function Home() {
         </div>
       ) : (
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {links.map((link) => (
+          {userLinks.map((link) => (
             <LinkCard
               key={link.id}
               link={{

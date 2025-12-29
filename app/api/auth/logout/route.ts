@@ -1,19 +1,14 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { lucia, validateRequest } from "@/lib/auth";
+import { auth } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth-helpers";
 
 export async function GET() {
   const { session } = await validateRequest();
   if (!session) {
     return redirect("/auth/login");
   }
-  await lucia.invalidateSession(session.id);
-
-  const sessionCookie = lucia.createBlankSessionCookie();
-  (await cookies()).set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes
-  );
+  await auth.api.signOut({
+    headers: await import("next/headers").then((m) => m.headers()),
+  });
   return redirect("/auth/login");
 }

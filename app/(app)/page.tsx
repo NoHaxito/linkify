@@ -1,5 +1,5 @@
 import { LinkForm } from "@/components/forms/link-form";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth-helpers";
 import { generateRandomString } from "@/lib/utils";
 
 export default async function Home() {

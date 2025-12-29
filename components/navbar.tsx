@@ -1,6 +1,6 @@
 import { LucideLink } from "lucide-react";
 import Link from "next/link";
-import { validateRequest } from "@/lib/auth";
+import { validateRequest } from "@/lib/auth-helpers";
 import { cn } from "@/lib/utils";
 import { GoToDashboardButton } from "./go-to-dashboard-button";
 import GithubIcon from "./icons/github";

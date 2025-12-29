@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1767045289669,
+      "tag": "0000_steep_deathbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1767045838572,
+      "tag": "0001_stiff_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767045939900,
+      "tag": "0002_clammy_electro",
+      "breakpoints": true
+    }
+  ]
+}
