@@ -1,6 +1,8 @@
 import { Loader2 } from "lucide-react";
+import { headers } from "next/headers";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { db, linkAnalytics, linkAnalyticsVisits } from "@/lib/db";
+import { getIp } from "@/lib/get-request-ip";
 import type { LinkProps } from "@/lib/types";
 import { Redirector } from "./redirector";
 
@@ -10,11 +12,18 @@ export interface Country {
 }
 
 async function saveAnalytics(link: LinkProps, saveAnalytics?: boolean) {
+  const headersList = await headers();
+
+  const forwardedFor = getIp(headersList);
+
   if (saveAnalytics) {
     const countryInfo: Country = await fetch(
       `${process.env.NEXT_PUBLIC_APP_URL}/api/get-request-info`,
       {
         credentials: "same-origin",
+        headers: {
+          "X-Forwarded-For": forwardedFor as string,
+        },
       }
     ).then((res) => res.json());
     if (!(countryInfo.country && countryInfo.countryCode)) {
