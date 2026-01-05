@@ -50,7 +50,7 @@ async function saveAnalytics(link: LinkProps, saveAnalytics?: boolean) {
   }
 }
 export async function RedirectingView({ link }: { link: LinkProps }) {
-  await saveAnalytics(link, true);
+  await saveAnalytics(link, false);
 
   return (
     <Card className="w-[95%] max-w-sm">
